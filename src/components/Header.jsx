@@ -170,7 +170,7 @@ export default function Header() {
               </div>
               <div>
                 <div className="text-sm font-bold text-slate-900">RN ALL STEEL</div>
-                <div className="text-xs text-slate-500">Fabrication • Mumbai & Thane</div>
+                <div className="text-xs text-slate-500">Fabrication Word</div>
               </div>
             </div>
 
