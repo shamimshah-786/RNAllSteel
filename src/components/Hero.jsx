@@ -154,19 +154,19 @@ export default function Hero() {
                 <div className="col-span-2">
                   <div className="relative h-56 sm:h-72 lg:h-96 bg-linear-to-br from-blue-100/50 to-gray-100/50 rounded-xl sm:rounded-3xl overflow-hidden shadow-xl group">
                     <img
-                      src="/images/banner1.webp"
+                      src="/images/banner.jpg"
                       alt="Industrial Steel Fabrication"
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                     />
                     {/* Overlay Content */}
-                    <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/30 to-transparent z-20"></div>
-                    <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-6 lg:p-8 z-30">
-                      <div className="flex items-center gap-2 mb-1 sm:mb-3">
+                    <div className="absolute inset-0 bg-linear-to-t from-transparent via-black/30 to-black/80 z-20"></div>
+                    <div className="absolute top-0 left-0 right-0 p-3 sm:p-6 lg:p-8 z-30">
+                      {/* <div className="flex items-center gap-2 mb-1 sm:mb-3">
                         <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
                         <span className="text-green-300 text-xs font-semibold">
                           Available Now
                         </span>
-                      </div>
+                      </div> */}
                       <h3 className="text-white font-bold text-base sm:text-xl lg:text-3xl mb-1 sm:mb-3">
                         Industrial Steel Fabrication
                       </h3>
@@ -181,14 +181,14 @@ export default function Hero() {
                 <div className="relative group">
                   <div className="relative h-32 sm:h-48 lg:h-56 bg-linear-to-br from-gray-50 to-blue-50 rounded-lg sm:rounded-2xl overflow-hidden shadow-lg group-hover:shadow-xl transition-all duration-500">
                     <img
-                      src="/images/banner2.jpg"
-                      alt="Premium Steel Railings"
+                      src="/images/glass.jpg"
+                      alt="Premium Steel Glass Railings"
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
                     <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent"></div>
                     <div className="absolute bottom-0 left-0 right-0 p-2 sm:p-4">
-                      <p className="text-white font-semibold text-sm">Premium Railings</p>
-                      <p className="text-blue-200 text-xs">Residential & Commercial</p>
+                      <p className="text-white font-semibold text-sm">Premium Glass Railings</p>
+                      <p className="text-blue-200 text-xs">Modern Glass Balcony Railings</p>
                     </div>
                   </div>
                 </div>
@@ -197,13 +197,13 @@ export default function Hero() {
                   <div className="relative h-32 sm:h-48 lg:h-56 bg-linear-to-br from-gray-50 to-blue-50 rounded-lg sm:rounded-2xl overflow-hidden shadow-lg group-hover:shadow-xl transition-all duration-500">
                     <img
                       src="/images/banner3.jpg"
-                      alt="Security Solutions"
+                      alt="Staircase Railings"
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
                     <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent"></div>
                     <div className="absolute bottom-0 left-0 right-0 p-2 sm:p-4">
-                      <p className="text-white font-semibold text-sm">Security Solutions</p>
-                      <p className="text-blue-200 text-xs">Gates & Barriers</p>
+                      <p className="text-white font-semibold text-sm">Staircase Railings</p>
+                      <p className="text-blue-200 text-xs">Railings</p>
                     </div>
                   </div>
                 </div>

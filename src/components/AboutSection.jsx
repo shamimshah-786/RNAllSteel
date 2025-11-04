@@ -39,7 +39,7 @@ export default function AboutSection() {
         <div className="text-center mb-10 sm:mb-14 lg:mb-20">
           <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-3 sm:px-4 py-2 rounded-full text-sm font-semibold mb-4">
             <FaAward className="text-blue-600" />
-            <span>TRUSTED SINCE 2009</span>
+            <span>TRUSTED SINCE 2010</span>
           </div>
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 sm:mb-6 leading-tight">
             Leading Steel Fabrication

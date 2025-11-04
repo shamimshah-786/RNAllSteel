@@ -12,7 +12,7 @@ const services = [
     name: 'Security Doors & Gates',
     description: 'Robust security solutions including main gates, compound gates, and security doors.',
     icon: FaDoorClosed,
-    image: '/projects/main-gates/ms-decorative-main-gate-house.webp',
+    image: '/projects/main-doors/ss-designer-main-door.webp',
     features: ['High Security', 'Weather Resistant', 'Custom Sizes']
   },
   {
@@ -33,14 +33,14 @@ const services = [
     name: 'Industrial Structures',
     description: 'Heavy-duty industrial structures, sheds, and support systems for commercial use.',
     icon: FaIndustry,
-    image: '/projects/railings/ss-mezzanine-railing-metal-stairs.webp',
+    image: '/images/banner.jpg',
     features: ['Heavy Duty', 'Commercial Grade', 'Custom Engineering']
   },
   {
     name: 'Custom Fabrication',
     description: 'Bespoke metal fabrication services tailored to your specific requirements.',
     icon: FaTools,
-    image: '/projects/main-doors/ss-designer-main-door.webp',
+    image: '/images/custom-door.jpg',
     features: ['Bespoke Designs', 'Precision Work', 'Tailored Solutions']
   }
 ];
