@@ -134,14 +134,14 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Scroll progress */}
+        {/* Scroll progress
         <div className="absolute left-0 right-0 bottom-0 h-0.5 bg-slate-100">
           <div
             className="h-0.5 bg-gradient-to-r from-blue-600 to-sky-600 transition-all duration-150"
             style={{ width: `${Math.round(scrollProgress * 100)}%` }}
             aria-hidden
           />
-        </div>
+        </div> */}
       </header>
 
       {/* Spacer so page content isn't hidden under fixed header */}

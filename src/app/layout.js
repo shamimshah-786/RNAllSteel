@@ -2,6 +2,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
+import TopProgress from '../components/TopProgress'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -15,6 +16,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className}>
+        {/* Top progress loader (client component) */}
+        <TopProgress />
+
         <div className="min-h-screen flex flex-col">
           <Header />
           <main className="flex-grow page-transition">
