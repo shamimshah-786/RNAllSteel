@@ -106,7 +106,7 @@ export default function Hero() {
             {/* Desktop Contact Buttons - Hidden on Mobile */}
             <div className="hidden sm:flex items-center gap-3 justify-center lg:justify-start pt-3">
               <a
-                href="tel:+919876543210"
+                href="tel:+919665181246"
                 className="group flex items-center gap-2 bg-linear-to-r from-blue-50 to-blue-100/50 hover:from-blue-100 hover:to-blue-200 border border-blue-200/80 hover:border-blue-300 text-blue-700 hover:text-blue-800 px-4 py-2 rounded-xl transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg backdrop-blur-sm"
               >
                 <div className="relative">
@@ -119,13 +119,13 @@ export default function Hero() {
                     Call Direct
                   </p>
                   <span className="font-bold text-sm text-gray-900 group-hover:text-blue-900 transition-colors duration-300">
-                    +91 98765 43210
+                    +91 96651 81246 
                   </span>
                 </div>
               </a>
 
               <a
-                href="https://wa.me/919876543210"
+                href="https://wa.me/+919665181246"
                 className="group flex items-center gap-2 bg-linear-to-r from-green-50 to-green-100/50 hover:from-green-100 hover:to-green-200 border border-green-200/80 hover:border-green-300 text-green-700 hover:text-green-800 px-4 py-2 rounded-xl transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg backdrop-blur-sm"
               >
                 <div className="relative">
@@ -213,7 +213,7 @@ export default function Hero() {
               <div className="flex sm:hidden items-center mt-8 gap-2 bg-linear-to-r from-blue-50 to-green-50 border border-gray-200 rounded-xl p-2 w-full justify-between shadow-md">
                 {/* Call Section */}
                 <a
-                  href="tel:+919876543210"
+                  href="tel:+919665181246"
                   className="flex items-center gap-2 flex-1 group"
                 >
                   <div className="w-10 h-10 bg-linear-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center group-hover:from-blue-600 group-hover:to-blue-700 transition-all duration-300 shadow-md flex-shrink-0">
@@ -224,7 +224,7 @@ export default function Hero() {
                       Call Now
                     </p>
                     <span className="font-bold text-xs text-gray-900 block truncate">
-                      +91 98765 43210
+                      +91 96651 81246
                     </span>
                   </div>
                 </a>
@@ -234,7 +234,7 @@ export default function Hero() {
 
                 {/* WhatsApp Section */}
                 <a
-                  href="https://wa.me/919876543210"
+                  href="https://wa.me/+919665181246"
                   className="flex items-center gap-2 group flex-1 justify-center"
                 >
                   <div className="w-10 h-10 border rounded-xl flex-1 border-green-500 flex items-center justify-center transition-all duration-300 shadow-md flex-shrink-0">

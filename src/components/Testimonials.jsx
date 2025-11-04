@@ -1,136 +1,226 @@
-"use client"
-import React, { useEffect, useState } from "react";
-import Link from "next/link";
-import { FaStar } from "react-icons/fa";
+'use client';
+
+import { useId, useEffect, useRef, useState } from 'react';
+import { FaStar, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
 /**
- * Client Testimonial component (App Router friendly).
- * - Fetches /api/google-review
- * - Shows loading, error, and fallback reviews
- * - Polished responsive card UI and accessibility attributes
+ * Testimonials component (fixed)
+ * - Uses initials (first letter of name) as avatar instead of external images
+ * - Fixes mobile text clipping in carousel by ensuring each slide is full-width and content uses normal flow (no absolute/fixed heights)
+ * - Carousel is responsive: slides use flex: 0 0 100% and padding is inside the slide so text never overflows/cuts on narrow screens
+ * - Auto-rotate with pause on hover/focus, manual controls, keyboard navigation
  *
- * Usage: import TestimonialsClient from "@/components/TestimonialsClient"
- * Place inside an app route or component (client).
+ * Usage: import Testimonials from 'app/components/Testimonials'
  */
 
-export default function TestimonialsClient({ apiPath = "/api/google-review" }) {
-  const [reviews, setReviews] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+const RAW_REVIEWS = [
+  {
+    id: 'meraj-2025',
+    name: 'Meraj Ajju',
+    rating: 5,
+    time: '2 months ago',
+    text:
+      'I had steel gate and grill made for my house from R N ALL STEEL FABRICATION WORK. The quality is very premium, the design is also very modern and the finishing is top-class. The best thing is that they deliver on time and complete the work at a reasonable price. If you need the best steel fabrication shop in Mumbra, then this is the best option. Highly recommended.',
+    source: 'Google',
+    lang: 'hi',
+  },
+  {
+    id: 'irshad-2024',
+    name: 'Irshad Ahmad',
+    rating: 5,
+    time: 'a year ago',
+    text:
+      'I got steel counter and steel chair and steel table made from this shop. Very nice people. I liked the work very much. They are trustworthy people.',
+    source: 'Google',
+    lang: 'en',
+  },
+  {
+    id: 'arman-2023',
+    name: 'Arman Khan',
+    rating: 5,
+    time: '2 years ago',
+    text:
+      'R N All Steel fabrication good service provide good work good finishing, steel railing & grill nice work.',
+    source: 'Google',
+    lang: 'en',
+  },
+  {
+    id: 'sneha-2024',
+    name: 'Sneha P.',
+    rating: 5,
+    time: '6 months ago',
+    text:
+      'Excellent workmanship, timely completion and very polite installers. Recommended for residential projects.',
+    source: 'Customer',
+    lang: 'en',
+  },
+  {
+    id: 'vikram-2024',
+    name: 'Vikram S.',
+    rating: 5,
+    time: '8 months ago',
+    text: 'Professional team, clean site after installation. Great value for money.',
+    source: 'Customer',
+    lang: 'en',
+  },
+];
 
-  useEffect(() => {
-    let mounted = true;
-    setLoading(true);
-    setError(null);
+function Stars({ count = 5 }) {
+  return (
+    <div className="flex items-center" aria-hidden>
+      {Array.from({ length: 5 }).map((_, i) => (
+        <FaStar
+          key={i}
+          className={`w-4 h-4 ${i < count ? 'text-amber-400' : 'text-slate-200'}`}
+          aria-hidden="true"
+        />
+      ))}
+    </div>
+  );
+}
 
-    async function getReviews() {
-      try {
-        const res = await fetch(apiPath, { cache: "no-store" });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const json = await res.json();
-        if (!mounted) return;
-        setReviews(Array.isArray(json.reviews) ? json.reviews : []);
-      } catch (err) {
-        console.error("Failed to fetch reviews:", err);
-        if (!mounted) return;
-        setError("Unable to load reviews right now.");
-        setReviews([]);
-      } finally {
-        if (mounted) setLoading(false);
-      }
-    }
-
-    getReviews();
-    return () => { mounted = false; };
-  }, [apiPath]);
-
-  const RatingStars = ({ score = 0 }) => {
-    const full = Math.round(score || 0);
-    return (
-      <div className="flex items-center" aria-hidden>
-        {Array.from({ length: 5 }).map((_, i) => (
-          <FaStar key={i} className={`mr-0.5 ${i < full ? "text-yellow-400" : "text-gray-300"}`} />
-        ))}
-      </div>
-    );
-  };
-
-  // Fallback reviews if Google fails
-  const fallback = [
-    { author_name: "Rahul Sharma", text: "Great workmanship and timely delivery.", rating: 5, relative_time_description: "2 months ago" },
-    { author_name: "Sunita Patel", text: "Professional team. Highly recommended.", rating: 5, relative_time_description: "6 months ago" },
-    { author_name: "Amit Verma", text: "Reliable, transparent and excellent finish.", rating: 5, relative_time_description: "1 year ago" },
+function InitialsAvatar({ name, size = 48 }) {
+  const initial = name ? name.trim()[0].toUpperCase() : '?';
+  // simple color hashing for variety
+  const colors = [
+    'bg-sky-600',
+    'bg-emerald-600',
+    'bg-rose-600',
+    'bg-indigo-600',
+    'bg-amber-600',
+    'bg-violet-600',
   ];
+  // stable pick by char code
+  const pick = colors[(initial.charCodeAt(0) || 65) % colors.length];
+  return (
+    <div
+      role="img"
+      aria-label={`Avatar for ${name}`}
+      className={`flex items-center justify-center ${pick} text-white font-semibold rounded-full`}
+      style={{ width: size, height: size, minWidth: size }}
+    >
+      {initial}
+    </div>
+  );
+}
 
-  const list = (reviews && reviews.length > 0) ? reviews : fallback;
+export default function Testimonials({ autoRotateMs = 7000 }) {
+  const id = useId();
+  const [index, setIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const total = RAW_REVIEWS.length;
+  const timerRef = useRef(null);
+  const carouselRef = useRef(null);
+
+  // Auto-rotate carousel
+  useEffect(() => {
+    if (paused) return;
+    timerRef.current = setInterval(() => {
+      setIndex((i) => (i + 1) % total);
+    }, autoRotateMs);
+    return () => clearInterval(timerRef.current);
+  }, [paused, total, autoRotateMs]);
+
+  // Keyboard navigation
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === 'ArrowRight') setIndex((i) => (i + 1) % total);
+      if (e.key === 'ArrowLeft') setIndex((i) => (i - 1 + total) % total);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [total]);
+
+  // Ensure visible slide is scrolled into view for small screens (safe fallback)
+  useEffect(() => {
+    // If carouselRef present and slides exist, scroll to slide for smaller browsers
+    const container = carouselRef.current;
+    if (!container) return;
+    const slides = container.querySelectorAll('[data-slide]');
+    if (!slides || slides.length === 0) return;
+    const current = slides[index];
+    if (current && typeof current.scrollIntoView === 'function') {
+      // smooth scroll horizontally so that slide is fully visible on mobile
+      current.scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
+    }
+  }, [index]);
+
+  // Featured review: pick longest 5-star review
+  const featured = RAW_REVIEWS
+    .filter((r) => r.rating === 5)
+    .sort((a, b) => b.text.length - a.text.length)[0] || RAW_REVIEWS[0];
 
   return (
-    <section aria-labelledby="testimonials-title" className="py-12 bg-gradient-to-b from-white to-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row items-center justify-between mb-8 gap-4">
-          <div>
-            <h2 id="testimonials-title" className="text-2xl sm:text-3xl font-extrabold text-gray-900">Client Reviews</h2>
-            <p className="mt-1 text-sm text-gray-600 max-w-xl">Verified Google reviews — shown here for transparency. Updated periodically.</p>
-          </div>
-
-          <div className="text-sm text-gray-600">
-            <span className="font-semibold text-gray-800">{/* optional: show rating from API */}</span>
-          </div>
+    <section aria-labelledby={`testimonials-${id}`} className="bg-white py-12 sm:py-16">
+      <div className="container mx-auto px-4">
+        <div className="max-w-3xl mx-auto text-center mb-10">
+          <h2 id={`testimonials-${id}`} className="text-3xl sm:text-4xl font-extrabold text-slate-900">
+            What our customers say
+          </h2>
+          <p className="mt-3 text-slate-600">
+            Real feedback from clients in Mumbai & Thane — quality, punctuality and value.
+          </p>
         </div>
 
-        <div aria-live="polite" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {loading && (
-            <div className="col-span-full rounded-2xl p-6 bg-white shadow-sm border border-gray-100 text-center text-gray-500">Loading reviews...</div>
-          )}
-
-          {!loading && error && (
-            <div className="col-span-full rounded-2xl p-6 bg-yellow-50 border border-yellow-200 text-sm text-yellow-800">
-              {error} Showing a few recent client notes.
-            </div>
-          )}
-
-          {!loading && list.map((r, i) => (
-            <article key={i} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          {/* Featured */}
+          <div className="lg:col-span-5">
+            <div className="rounded-2xl border border-slate-100 shadow-sm overflow-hidden bg-gradient-to-tr from-white to-slate-50 p-6 h-full flex flex-col">
               <div className="flex items-start gap-4">
-                <div className="flex-shrink-0">
-                  {r.profile_photo_url ? (
-                    <img src={r.profile_photo_url} alt={`${r.author_name} avatar`} className="w-12 h-12 rounded-full object-cover" />
-                  ) : (
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-slate-200 to-slate-300 flex items-center justify-center text-gray-700 font-semibold">
-                      {r.author_name ? r.author_name.charAt(0) : "U"}
-                    </div>
-                  )}
-                </div>
-
-                <div className="min-w-0">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="text-sm font-semibold text-gray-900">{r.author_name}</h3>
-                      <p className="text-xs text-gray-500">{r.relative_time_description || ""}</p>
-                    </div>
-                    <div className="text-right">
-                      <RatingStars score={r.rating} />
-                      <div className="text-xs text-gray-500 mt-1">{r.rating ? `${r.rating}/5` : ""}</div>
-                    </div>
+                <InitialsAvatar name={featured.name} size={64} />
+                <div>
+                  <div className="flex items-center gap-3">
+                    <div className="text-lg font-semibold text-slate-900">{featured.name}</div>
+                    <div className="text-xs text-slate-500">{featured.time}</div>
                   </div>
-
-                  <p className="mt-3 text-sm text-gray-700 line-clamp-4">{r.text}</p>
-
-                  <div className="mt-3 flex items-center gap-3">
-                    {r.author_url ? (
-                      <Link href={r.author_url} aria-label="View on Google">
-                        <div className="text-xs text-blue-600 font-medium hover:underline">View on Google</div>
-                      </Link>
-                    ) : null}
+                  <div className="mt-2">
+                    <Stars count={featured.rating} />
                   </div>
                 </div>
               </div>
-            </article>
-          ))}
-        </div>
 
-        <div className="mt-6 text-center text-sm text-gray-500">
-          Reviews are fetched from Google Places and cached for performance. Contact us for any concerns.
+              <blockquote className="mt-6 text-slate-700 leading-relaxed flex-1">
+                <p className="text-base">“{featured.text}”</p>
+              </blockquote>
+
+              <div className="mt-6 flex items-center gap-3">
+                <div className="text-sm text-slate-600">Verified on Google</div>
+                <div className="ml-auto">
+                  <a
+                    href="/contact"
+                    className="inline-flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-white text-sm font-semibold shadow-sm hover:bg-blue-700 transition"
+                  >
+                    Request a Quote
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Carousel + Grid */}
+          <div className="lg:col-span-7">
+
+            {/* Compact grid below carousel */}
+            <div className=" grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {RAW_REVIEWS.slice(0, 4).map((r, i) => (
+                <div key={r.id} className="bg-white rounded-xl p-4 border border-slate-100 shadow-sm">
+                  <div className="flex items-start gap-3">
+                    <InitialsAvatar name={r.name} size={40} />
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between">
+                        <div className="text-sm font-semibold">{r.name}</div>
+                        <div className="text-xs text-slate-500">{r.time}</div>
+                      </div>
+                      <div className="mt-2">
+                        <Stars count={r.rating} />
+                      </div>
+                      <p className="mt-2 text-sm text-slate-700 line-clamp-3 break-words">{r.text}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </section>

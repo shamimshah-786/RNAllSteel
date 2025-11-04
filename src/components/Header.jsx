@@ -107,7 +107,7 @@ export default function Header() {
               {/* Contact buttons - desktop only */}
               <div className="hidden lg:flex lg:items-center lg:gap-3">
                 <a
-                  href="tel:+919876543210"
+                  href="tel:+919665181246"
                   className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-blue-600 to-sky-600 px-4 py-2 text-sm font-semibold text-white shadow hover:from-blue-700 hover:to-sky-700 transition"
                 >
                   <FaPhone className="h-4 w-4" aria-hidden />
@@ -115,7 +115,7 @@ export default function Header() {
                 </a>
 
                 <a
-                  href="https://wa.me/919876543210"
+                  href="https://wa.me/+919665181246"
                   className="inline-flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-emerald-700 bg-white hover:bg-emerald-50 transition"
                 >
                   <FaWhatsapp className="h-4 w-4" aria-hidden />
@@ -227,7 +227,7 @@ export default function Header() {
           <div className="px-5 pb-6 pt-4">
             <div className="flex gap-3">
               <a
-                href="tel:+919876543210"
+                href="tel:+919665181246"
                 onClick={() => setIsSidebarOpen(false)}
                 className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-blue-600 to-sky-600 px-4 py-3 text-sm font-semibold text-white shadow"
               >
@@ -235,7 +235,7 @@ export default function Header() {
                 Call
               </a>
               <a
-                href="https://wa.me/919876543210"
+                href="https://wa.me/+919665181246"
                 onClick={() => setIsSidebarOpen(false)}
                 className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg border border-slate-200 px-4 py-3 text-sm font-semibold text-emerald-700 bg-white"
               >

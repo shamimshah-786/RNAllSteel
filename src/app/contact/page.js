@@ -65,7 +65,7 @@ export default function Contact() {
     setErrors((prev) => ({ ...prev, [name]: undefined }));
   };
 
-  const handleSubmit = async (e) => {
+  async function handleSubmit(e) {
     e.preventDefault();
     setResult(null);
 
@@ -81,16 +81,26 @@ export default function Contact() {
     setIsSubmitting(true);
 
     try {
-      // Replace this with a real API call: fetch('/api/contact', ...)
-      // Simulate network request
-      await new Promise((res) => setTimeout(res, 900));
-
-      // Example success
-      setResult({
-        type: 'success',
-        message:
-          'Thank you! Your message has been sent. We will contact you within 24 hours.',
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          service: formData.service,
+          message: formData.message,
+          website: formData.website,
+        }),
       });
+
+      const json = await res.json();
+
+      if (!res.ok) {
+        throw new Error(json?.error || 'Failed to send message');
+      }
+
+      setResult({ type: 'success', message: json?.message || 'Message sent successfully.' });
 
       setFormData({
         name: '',
@@ -101,20 +111,19 @@ export default function Contact() {
         website: '',
       });
 
-      // move focus back to the success alert for screen reader users
+      // move focus to result for screen reader users
       const alert = document.getElementById(`contact-result-${id}`);
       alert?.focus();
     } catch (err) {
       console.error(err);
       setResult({
         type: 'error',
-        message:
-          'There was an error sending your message. Please try again or call us directly.',
+        message: err?.message || 'There was an error sending your message. Please try again later.',
       });
     } finally {
       setIsSubmitting(false);
     }
-  };
+  }
 
   return (
     <section
@@ -154,8 +163,7 @@ export default function Contact() {
                     <div className="text-sm font-semibold text-slate-900">
                       Phone
                     </div>
-                    <div className="text-sm">+91 98765 43210</div>
-                    <div className="text-sm">+91 98765 43211</div>
+                    <div className="text-sm">+91 96651 81246</div>
                   </div>
                 </li>
 
@@ -167,7 +175,7 @@ export default function Contact() {
                     <div className="text-sm font-semibold text-slate-900">
                       WhatsApp
                     </div>
-                    <div className="text-sm">+91 98765 43210 (Quick replies)</div>
+                    <div className="text-sm">+91 96651 81246 (Quick replies)</div>
                   </div>
                 </li>
 
@@ -179,7 +187,7 @@ export default function Contact() {
                     <div className="text-sm font-semibold text-slate-900">
                       Email
                     </div>
-                    <div className="text-sm">info@rnsteelfabrication.com</div>
+                    <div className="text-sm">rnallsteelfabrication@gmail.com</div>
                   </div>
                 </li>
 
@@ -204,7 +212,6 @@ export default function Contact() {
                       Working Hours
                     </div>
                     <div className="text-sm">Mon–Sat: 9:00 AM – 7:00 PM</div>
-                    <div className="text-sm">Sun: Emergency services</div>
                   </div>
                 </li>
               </ul>
@@ -224,46 +231,14 @@ export default function Contact() {
               </div>
               <div className="mt-4 text-center">
                 <a
-                  href="tel:+919876543210"
+                  href="tel:+919665181246"
                   className="inline-flex items-center gap-2 rounded-lg bg-white/10 px-4 py-2 text-sm font-semibold hover:bg-white/20"
                 >
                   <FaPhone className="h-4 w-4" />
-                  +91 98765 43210
+                  +91 96651 81246
                 </a>
               </div>
             </div>
-
-            {/* <div className="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm">
-              <h4 className="text-sm font-semibold text-slate-900 mb-3">
-                Why Choose Us
-              </h4>
-              <div className="grid grid-cols-2 gap-3 text-sm text-slate-700">
-                <div className="flex flex-col items-center gap-2">
-                  <div className="h-8 w-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center">
-                    ✓
-                  </div>
-                  <div className="text-center">15+ Years</div>
-                </div>
-                <div className="flex flex-col items-center gap-2">
-                  <div className="h-8 w-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center">
-                    ✓
-                  </div>
-                  <div className="text-center">ISO Quality</div>
-                </div>
-                <div className="flex flex-col items-center gap-2">
-                  <div className="h-8 w-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center">
-                    ✓
-                  </div>
-                  <div className="text-center">On-Time Delivery</div>
-                </div>
-                <div className="flex flex-col items-center gap-2">
-                  <div className="h-8 w-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center">
-                    ✓
-                  </div>
-                  <div className="text-center">Free Consult</div>
-                </div>
-              </div>
-            </div> */}
           </aside>
 
           {/* Right Column - Form */}
@@ -279,7 +254,7 @@ export default function Contact() {
                   </p>
                 </div>
                 <div className="hidden sm:block text-sm text-slate-500">
-                  Or call us: <a className="font-semibold text-slate-700" href="tel:+919876543210">+91 98765 43210</a>
+                  Or call us: <a className="font-semibold text-slate-700" href="tel:+919665181246">+91 96651 81246</a>
                 </div>
               </div>
 
@@ -482,14 +457,14 @@ export default function Contact() {
                   </button>
 
                   <a
-                    href="tel:+919876543210"
+                    href="tel:+919665181246"
                     className="inline-flex items-center gap-2 rounded-lg border border-slate-200 px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50"
                   >
                     <FaPhone className="h-4 w-4" /> Call Now
                   </a>
 
                   <a
-                    href="https://wa.me/919876543210"
+                    href="https://wa.me/+919665181246"
                     className="inline-flex items-center gap-2 rounded-lg border border-emerald-100 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700 hover:bg-emerald-100"
                   >
                     <FaWhatsapp className="h-4 w-4" /> WhatsApp

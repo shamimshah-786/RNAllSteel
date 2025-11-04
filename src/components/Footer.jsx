@@ -51,7 +51,7 @@ export default function Footer() {
       <div aria-hidden className="absolute -top-10 -left-10 w-44 h-44 rounded-full bg-blue-600/8 blur-3xl pointer-events-none" />
       <div aria-hidden className="absolute -bottom-10 -right-10 w-60 h-60 rounded-full bg-blue-500/6 blur-3xl pointer-events-none" />
 
-      <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-2">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10 lg:gap-12">
           {/* Brand / About */}
           <div className="md:col-span-2">
@@ -88,7 +88,7 @@ export default function Footer() {
                   </div>
                 </Link>
 
-                <Link href="https://wa.me/919876543210" aria-label="WhatsApp">
+                <Link href="https://wa.me/+919665181246" aria-label="WhatsApp">
                   <div className="group p-3 rounded-lg bg-gray-800/60 border border-gray-700/40 hover:bg-green-600/90 transition transform hover:-translate-y-1 inline-flex">
                     <FaWhatsapp className="w-5 h-5 text-gray-200 group-hover:text-white" />
                   </div>
@@ -127,13 +127,13 @@ export default function Footer() {
             <h4 className="text-lg font-bold mb-4">Contact Info</h4>
             <ul className="space-y-4 text-gray-300">
               <li>
-                <Link href="tel:+919876543210" aria-label="Call +91 98765 43210">
+                <Link href="tel:+919665181246" aria-label="Call +91 96651 81246">
                   <div className="flex items-start gap-3">
                     <div className="w-10 h-10 bg-blue-600/10 rounded-lg flex items-center justify-center">
                       <FaPhone className="text-blue-300" aria-hidden />
                     </div>
                     <div>
-                      <div className="text-sm text-gray-100 font-semibold">+91 98765 43210</div>
+                      <div className="text-sm text-gray-100 font-semibold">+91 96651 81246</div>
                       <div className="text-xs text-gray-400">Call / WhatsApp</div>
                     </div>
                   </div>
@@ -141,13 +141,13 @@ export default function Footer() {
               </li>
 
               <li>
-                <Link href="mailto:info@rnsteelworks.com" aria-label="Email info@rnsteelworks.com">
+                <Link href="mailto:rnallsteelfabrication@gmail.com" aria-label="Email rnallsteelfabrication@gmail.com">
                   <div className="flex items-start gap-3">
                     <div className="w-10 h-10 bg-blue-600/10 rounded-lg flex items-center justify-center">
                       <FaEnvelope className="text-blue-300" aria-hidden />
                     </div>
                     <div>
-                      <div className="text-sm text-gray-100">info@rnsteelworks.com</div>
+                      <div className="text-sm text-gray-100">rnallsteelfabrication@gmail.com</div>
                       <div className="text-xs text-gray-400">General inquiries</div>
                     </div>
                   </div>
@@ -188,14 +188,14 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="mt-12 border-t border-gray-800/50 pt-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="text-sm text-gray-400">
+            <div className="text-sm text-gray-400 text-center">
               &copy; {new Date().getFullYear()} <span className="text-white font-semibold">RN All Steel Fabrication Works</span>. All rights reserved.
             </div>
 
-            <div className="flex items-center gap-4">
-              <div className="text-sm text-gray-400 hidden sm:block">Managed & Designed by</div>
+            <div className="flex items-center gap-2">
+              <div className="text-sm text-gray-400 block">Managed & Designed by</div>
               <Link href="https://rbmstudios.vercel.app" aria-label="RBM Studios (opens in new tab)">
-                <div className="text-sm font-semibold text-gray-200 hover:text-white transition">RBM Studios</div>
+                <div className="text-sm font-semibold text-gray-200 hover:text-white hover:underline active:underline transition">RBM Studios</div>
               </Link>
             </div>
           </div>
@@ -215,14 +215,14 @@ export default function Footer() {
             style={{ transformOrigin: "center bottom" }}
           >
             {/* WhatsApp */}
-            <Link href="https://wa.me/919876543210" aria-label="WhatsApp">
+            <Link href="https://wa.me/+919665181246" aria-label="WhatsApp">
               <div className="w-12 h-12 rounded-full bg-green-500 hover:bg-green-600 shadow-lg flex items-center justify-center text-white transition transform hover:-translate-y-0.5">
                 <FaWhatsapp />
               </div>
             </Link>
 
             {/* Call */}
-            <Link href="tel:+919876543210" aria-label="Call">
+            <Link href="tel:+919665181246" aria-label="Call">
               <div className="w-12 h-12 rounded-full bg-blue-600 hover:bg-blue-700 shadow-lg flex items-center justify-center text-white transition transform hover:-translate-y-0.5">
                 <FaPhone />
               </div>

@@ -1,179 +1,429 @@
-const services = [
-  {
-    title: 'SS/MS Railings',
-    description: 'Custom stainless steel and mild steel railings for staircases, balconies, terraces, and corridors. We create durable and aesthetically pleasing designs that enhance safety while complementing your space architecture.',
-    features: ['Custom designs', 'Powder coating', 'Stainless steel & MS options', 'Indoor & outdoor use'],
-    image: '/images/railings-service.jpg'
-  },
-  {
-    title: 'Security Doors & Gates',
-    description: 'Heavy-duty security doors and main gates designed for maximum safety and durability. Our security solutions include decorative elements without compromising on strength and security features.',
-    features: ['Burglar-proof designs', 'Multiple locking systems', 'Custom sizes', 'Decorative options'],
-    image: '/images/security-doors-service.jpg'
-  },
-  {
-    title: 'Balcony & Window Grills',
-    description: 'Aesthetic and secure grills for windows and balconies available in various patterns and designs. We balance security needs with ventilation and visual appeal.',
-    features: ['Various patterns', 'Anti-climb designs', 'Weather-resistant', 'Easy maintenance'],
-    image: '/images/window-grills-service.jpg'
-  },
-  {
-    title: 'Kitchen Trolleys & Counters',
-    description: 'Stainless steel kitchen trolleys, counters, and storage solutions designed for modern kitchens. Hygienic, durable, and space-efficient designs for commercial and residential kitchens.',
-    features: ['Food-grade stainless steel', 'Modular designs', 'Easy cleaning', 'Space optimization'],
-    image: '/images/kitchen-trolleys-service.jpg'
-  },
-  {
-    title: 'Industrial & Commercial Steel Structures',
-    description: 'Heavy-duty industrial structures including sheds, warehouses, factory structures, and commercial building frameworks. Engineered for strength, durability, and compliance with industrial standards.',
-    features: ['Structural engineering', 'Heavy-duty construction', 'Custom specifications', 'Industrial standards'],
-    image: '/images/industrial-structures-service.jpg'
-  },
-  {
-    title: 'Custom Metal Fabrication',
-    description: 'Bespoke metal fabrication services tailored to your specific requirements. From custom furniture to specialized industrial components, we bring your ideas to life with precision engineering.',
-    features: ['Design consultation', 'Precision fabrication', 'Multiple metal options', 'Quality assurance'],
-    image: '/images/custom-fabrication-service.jpg'
-  },
-  {
-    title: 'Onsite Welding & Repairs',
-    description: 'Professional onsite welding services and repair work for existing steel structures. Emergency repair services and maintenance for residential, commercial, and industrial clients.',
-    features: ['Emergency services', 'All welding types', 'Structural repairs', 'Maintenance contracts'],
-    image: '/images/welding-repairs-service.jpg'
-  }
-]
+'use client';
 
-export const metadata = {
-  title: 'Our Services | Professional Steel Fabrication in Mumbai & Thane',
-  description: 'Expert steel fabrication services including railings, security doors, industrial structures, and custom metal work. Quality craftsmanship serving Mumbai and Thane.',
+import React, { useId, useState, useRef, useEffect } from 'react';
+import Image from 'next/image';
+import { FaChevronRight, FaPhoneAlt } from 'react-icons/fa';
+
+/**
+ * Services page with Quick Quote modal that sends an email via /api/contact
+ * - QuickQuoteModal posts to /api/contact (same handler as Contact page)
+ * - Modal includes simple client-side validation and shows success/error UI
+ * - Replace image paths in SERVICES if needed
+ */
+
+const SERVICES = [
+  {
+    id: 'railings',
+    title: 'SS / MS Railings',
+    category: 'Residential',
+    description:
+      'Custom stainless steel and mild steel railings for staircases, balconies and terraces — engineered for safety and style.',
+    features: ['Custom designs', 'Powder coating', 'Indoor & outdoor', 'Durable finish'],
+    image: '/projects/railings/stainless-steel-staircase-railing.webp',
+  },
+  {
+    id: 'security-gates',
+    title: 'Security Doors & Gates',
+    category: 'Security',
+    description:
+      'Robust security doors and gates with multi-point locking and reinforced frames for maximum protection.',
+    features: ['Burglar-proof', 'Multi-lock systems', 'Custom sizes', 'Decorative options'],
+    image: '/projects/main-gates/stainless-steel-main-gate-house.webp',
+  },
+  {
+    id: 'window-grills',
+    title: 'Balcony & Window Grills',
+    category: 'Residential',
+    description:
+      'Aesthetic grills that do not compromise ventilation — anti-climb and weather-resistant designs.',
+    features: ['Pattern variety', 'Anti-climb', 'Weather resistant', 'Low maintenance'],
+    image: '/projects/window-grills/stainless-steel-window-grill-modern.webp',
+  },
+  {
+    id: 'kitchen',
+    title: 'Kitchen Trolleys & Counters',
+    category: 'Commercial',
+    description:
+      'Hygienic stainless-steel trolleys and counters for commercial kitchens — modular and easy to sanitize.',
+    features: ['Food-grade steel', 'Modular', 'Easy cleaning', 'Space saving'],
+    image: '/projects/street-stalls/stainless-steel-food-cart-stall.webp',
+  },
+  {
+    id: 'structures',
+    title: 'Industrial & Commercial Structures',
+    category: 'Commercial',
+    description:
+      'Structural-grade fabrication for warehouses, sheds and industrial projects built to standards.',
+    features: ['Engineered', 'Heavy-duty', 'Custom specs', 'Compliance ready'],
+    image: '/projects/main-gates/laser-cut-steel-main-gate.webp',
+  },
+  {
+    id: 'custom-fab',
+    title: 'Custom Metal Fabrication',
+    category: 'Custom',
+    description:
+      'Bespoke metalwork from concept to finished product — furniture, fixtures and specialty parts.',
+    features: ['Design consult', 'Precision', 'Multiple metals', 'QA'],
+    image: '/projects/main-doors/ss-designer-main-door.webp',
+  },
+  {
+    id: 'welding',
+    title: 'Onsite Welding & Repairs',
+    category: 'Service',
+    description:
+      'Fast, high-quality onsite welding and structural repairs with emergency support options.',
+    features: ['Emergency', 'All weld types', 'Structural repair', 'Maintenance plans'],
+    image: '/projects/collapsible-gates/collapsible-steel-gate.webp',
+  },
+];
+
+function QuickQuoteModal({ open, service, onClose }) {
+  const nameRef = useRef(null);
+  const [form, setForm] = useState({
+    name: '',
+    contact: '',
+    message: '',
+    website: '', // honeypot
+  });
+  const [errors, setErrors] = useState({});
+  const [submitting, setSubmitting] = useState(false);
+  const [status, setStatus] = useState(null); // {type, message}
+
+  useEffect(() => {
+    if (open) {
+      setTimeout(() => nameRef.current?.focus?.(), 60);
+      setErrors({});
+      setStatus(null);
+      setForm({ name: '', contact: '', message: '', website: '' });
+    }
+  }, [open, service]);
+
+  if (!open) return null;
+
+  const validate = () => {
+    const e = {};
+    if (!form.name.trim()) e.name = 'Please provide your name';
+    if (!form.contact.trim()) e.contact = 'Provide phone or email';
+    if (!form.message.trim()) e.message = 'Please briefly describe the project';
+    if (form.website && form.website.trim().length > 0) e.website = 'Spam detected';
+    return e;
+  };
+
+  const handleChange = (e) => setForm((s) => ({ ...s, [e.target.name]: e.target.value }));
+
+  const handleSubmit = async (ev) => {
+    ev.preventDefault();
+    const e = validate();
+    if (Object.keys(e).length) {
+      setErrors(e);
+      return;
+    }
+    setSubmitting(true);
+    setStatus(null);
+
+    try {
+      const payload = {
+        name: form.name,
+        email: form.contact.includes('@') ? form.contact : '',
+        phone: !form.contact.includes('@') ? form.contact : '',
+        service: service ? service.title : 'General Quote',
+        message: `${form.message}\n\n-- Quick quote requested for service: ${service ? service.title : 'General'}`,
+        website: form.website,
+      };
+
+      const res = await fetch('/api/quote', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      const json = await res.json();
+      if (!res.ok) throw new Error(json?.error || 'Failed to send request');
+
+      setStatus({ type: 'success', message: json?.message || 'Request sent — we will contact you soon.' });
+      setForm({ name: '', contact: '', message: '', website: '' });
+    } catch (err) {
+      console.error(err);
+      setStatus({ type: 'error', message: err.message || 'Unable to send request. Try again or call.' });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <div role="dialog" aria-modal="true" aria-label="Quick quote" className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-black/40" onClick={onClose} />
+      <div className="relative w-full max-w-xl bg-white rounded-2xl shadow-2xl overflow-hidden">
+        <header className="flex items-start justify-between p-5 border-b">
+          <div>
+            <h3 className="text-lg font-bold text-slate-900">{service ? `Get Quote — ${service.title}` : 'Request a Quote'}</h3>
+            <p className="text-sm text-slate-600 mt-1">Free site visit and detailed estimate — no obligations.</p>
+          </div>
+          <button onClick={onClose} aria-label="Close" className="text-slate-500 hover:text-slate-800">✕</button>
+        </header>
+
+        <form onSubmit={handleSubmit} className="p-6 grid gap-4">
+          <label className="text-sm">
+            Your name
+            <input
+              ref={nameRef}
+              name="name"
+              value={form.name}
+              onChange={handleChange}
+              className="mt-1 w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-200"
+              placeholder="e.g., Rahul Sharma"
+            />
+            {errors.name && <p className="text-xs text-rose-600 mt-1">{errors.name}</p>}
+          </label>
+
+          <label className="text-sm">
+            Phone or Email
+            <input
+              name="contact"
+              value={form.contact}
+              onChange={handleChange}
+              className="mt-1 w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-200"
+              placeholder="+91 9xxxxxxxxx or name@domain.com"
+            />
+            {errors.contact && <p className="text-xs text-rose-600 mt-1">{errors.contact}</p>}
+          </label>
+
+          <label className="text-sm">
+            Brief project details
+            <textarea
+              name="message"
+              rows={3}
+              value={form.message}
+              onChange={handleChange}
+              className="mt-1 w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-200"
+              placeholder="Short details, site, approximate size..."
+            />
+            {errors.message && <p className="text-xs text-rose-600 mt-1">{errors.message}</p>}
+          </label>
+
+          {/* honeypot - hidden */}
+          <input name="website" value={form.website} onChange={handleChange} className="hidden" tabIndex="-1" autoComplete="off" />
+
+          {status && (
+            <div
+              role="status"
+              className={`rounded-md p-3 text-sm ${status.type === 'success' ? 'bg-emerald-50 text-emerald-800' : 'bg-rose-50 text-rose-800'}`}
+            >
+              {status.message}
+            </div>
+          )}
+
+          <div className="flex items-center justify-end gap-3">
+            <button type="button" onClick={onClose} className="px-4 py-2 rounded-md border">Cancel</button>
+            <button
+              type="submit"
+              disabled={submitting}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-gradient-to-br from-blue-600 to-sky-600 text-white"
+            >
+              {submitting ? 'Sending...' : 'Request Quote'}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+/* Service card component */
+function ServiceCard({ service, onQuickQuote }) {
+  return (
+    <article aria-labelledby={`card-${service.id}-title`} className="group bg-white rounded-2xl shadow-md hover:shadow-xl transform transition hover:-translate-y-1 overflow-hidden grid md:grid-cols-3">
+      <div className="relative h-56 md:h-auto md:col-span-1">
+        <Image
+          src={service.image}
+          alt={service.title}
+          fill
+          sizes="(max-width: 768px) 100vw, 33vw"
+          className="object-cover transition-transform duration-500 group-hover:scale-105"
+          placeholder="blur"
+          blurDataURL="/_next/image/placeholder.png"
+        />
+        <div className="absolute left-4 top-4 bg-white/90 text-xs px-3 py-1 rounded-full font-semibold shadow">
+          <span className="text-slate-700">{service.category}</span>
+        </div>
+      </div>
+
+      <div className="p-6 md:col-span-2 flex flex-col">
+        <h4 id={`card-${service.id}-title`} className="text-2xl font-extrabold mb-2 text-slate-900">{service.title}</h4>
+        <p className="text-sm text-slate-600 mb-4">{service.description}</p>
+
+        <ul className="flex flex-wrap gap-2 mb-4">
+          {service.features.map((f, i) => (
+            <li key={i} className="text-xs bg-slate-50 px-2 py-1 rounded-md border text-slate-700">{f}</li>
+          ))}
+        </ul>
+
+        <div className="mt-auto flex items-center gap-3">
+          <a href={`/projects#${service.id}`} className="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 hover:underline">
+            View Related Projects <FaChevronRight />
+          </a>
+
+          <button onClick={() => onQuickQuote(service)} className="ml-auto inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-br from-blue-600 to-sky-600 text-white rounded-md text-sm">
+            Quick Quote
+          </button>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+/* Process timeline (kept simple) */
+function ProcessTimeline() {
+  const steps = [
+    { title: 'Consultation', desc: 'Understand requirements, site constraints and desired finishes.' },
+    { title: 'Measurement & Quotation', desc: 'Free on-site measurements and a detailed written estimate.' },
+    { title: 'Design & Approval', desc: 'CAD drawings and finish options for client approval.' },
+    { title: 'Fabrication', desc: 'Precision fabrication in our facility with quality checks.' },
+    { title: 'Installation', desc: 'Onsite installation by experienced teams with safety controls.' },
+    { title: 'Aftercare', desc: 'Maintenance contracts and warranty services.' },
+  ];
+
+  return (
+    <section aria-labelledby="process-heading" className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+      <h3 id="process-heading" className="text-2xl font-bold mb-4">Our Process</h3>
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {steps.map((s, i) => (
+          <div key={i} className="flex gap-4 items-start p-4 rounded-lg bg-slate-50 border">
+            <div className="w-10 h-10 flex items-center justify-center rounded-full bg-blue-600 text-white font-bold">{i + 1}</div>
+            <div>
+              <div className="font-semibold">{s.title}</div>
+              <div className="text-sm text-slate-600 mt-1">{s.desc}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
 }
 
 export default function Services() {
+  const id = useId();
+  const [category, setCategory] = useState('All');
+  const [activeService, setActiveService] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const categories = ['All', ...Array.from(new Set(SERVICES.map((s) => s.category)))];
+  const filtered = SERVICES.filter((s) => (category === 'All' ? true : s.category === category));
+
+  function openQuote(svc) {
+    setActiveService(svc);
+    setModalOpen(true);
+  }
+  function closeQuote() {
+    setActiveService(null);
+    setModalOpen(false);
+  }
+
   return (
-    <div className="bg-white py-16">
-      <div className="container mx-auto px-4">
-        {/* Header Section */}
-        <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            Our Professional Services
-          </h1>
-          <div className="w-24 h-1 bg-blue-600 mx-auto mb-6"></div>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            Comprehensive steel fabrication solutions with precision engineering and quality craftsmanship. 
-            Serving residential, commercial, and industrial clients across Mumbai and Thane.
-          </p>
-        </div>
+    <main className="bg-slate-50 min-h-screen">
+      <section className="bg-gradient-to-r from-white to-slate-50 py-20">
+        <div className="container mx-auto px-4">
+          <div className="grid gap-8 lg:grid-cols-2 items-center">
+            <div>
+              <p className="inline-flex items-center gap-2 rounded-full bg-blue-50 px-3 py-1 text-sm font-semibold text-blue-700 mb-4">
+                Trusted Fabrication Since 2009
+              </p>
+              <h1 id={`services-hero-${id}`} className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-slate-900 leading-tight">
+                Precision Steel Fabrication — Built to Last
+              </h1>
+              <p className="mt-6 text-lg text-slate-600 max-w-2xl">
+                Residential, commercial and industrial metalworks — engineered, finished and installed with unmatched attention to detail.
+              </p>
 
-        {/* Services Grid */}
-        <div className="space-y-20">
-          {services.map((service, index) => (
-            <div 
-              key={index}
-              className={`flex flex-col lg:flex-row gap-12 items-center ${index % 2 === 1 ? 'lg:flex-row-reverse' : ''}`}
-            >
-              {/* Image Section */}
-              <div className="lg:w-1/2 w-full">
-                <div className="relative group">
-                  <div className="relative h-80 w-full rounded-xl overflow-hidden shadow-lg">
-                    <img 
-                      src={service.image} 
-                      alt={service.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-blue-900/10 group-hover:bg-transparent transition-colors duration-300"></div>
-                  </div>
-                  
-                  {/* Service Number */}
-                  <div className="absolute -top-4 -left-4 w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-lg shadow-lg">
-                    {index + 1}
-                  </div>
-                </div>
-              </div>
+              <div className="mt-8 flex flex-wrap gap-4 items-center">
+                <a href="/contact" className="inline-flex items-center gap-3 rounded-md bg-blue-600 px-6 py-3 text-md font-semibold text-white shadow-lg hover:bg-blue-700 transition">
+                  Get Free Consultation
+                </a>
 
-              {/* Content Section */}
-              <div className="lg:w-1/2 w-full">
-                <div className="max-w-lg mx-auto lg:mx-0">
-                  <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                    {service.title}
-                  </h2>
-                  <p className="text-gray-600 mb-6 leading-relaxed">
-                    {service.description}
-                  </p>
-                  
-                  {/* Features List */}
-                  <div className="space-y-3 mb-8">
-                    {service.features.map((feature, featureIndex) => (
-                      <div key={featureIndex} className="flex items-start space-x-3">
-                        <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                          <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
-                        </div>
-                        <span className="text-gray-700 font-medium">{feature}</span>
-                      </div>
-                    ))}
-                  </div>
+                <button onClick={() => openQuote(null)} className="inline-flex items-center gap-2 rounded-md px-6 py-3 text-md font-medium text-slate-700 border border-slate-200 hover:bg-slate-50 transition">
+                  Request Quote
+                </button>
 
-                  {/* CTA Button */}
-                  <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-300 shadow-md hover:shadow-lg">
-                    Get Quote for {service.title.split(' ')[0]}
-                  </button>
-                </div>
+                <a href="tel:+919665181246" className="ml-2 inline-flex items-center gap-2 text-sm font-semibold text-blue-600">
+                  <FaPhoneAlt /> +91 96651 81246
+                </a>
               </div>
             </div>
+
+            <div className="relative rounded-2xl overflow-hidden shadow-2xl h-80 md:h-96">
+              <Image
+                src="/projects/railings/ss-balcony-railing-curved-design.webp"
+                alt="Fabrication workshop"
+                fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="object-cover"
+                placeholder="blur"
+                blurDataURL="/_next/image/placeholder.png"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* <section className="container mx-auto px-4 mt-8">
+        <div className="flex flex-wrap items-center gap-3 mb-6">
+          {categories.map((c) => (
+            <button
+              key={c}
+              onClick={() => setCategory(c)}
+              className={`px-4 py-2 rounded-full text-sm font-semibold ${category === c ? 'bg-blue-600 text-white shadow-lg' : 'bg-white text-slate-700 border border-slate-200'}`}
+              aria-pressed={category === c}
+            >
+              {c}
+            </button>
+          ))}
+          <div className="ml-auto text-sm text-slate-500">
+            Showing <strong className="text-slate-900">{filtered.length}</strong> {filtered.length === 1 ? 'service' : 'services'}
+          </div>
+        </div>
+      </section> */}
+
+      <section className="container mx-auto px-4 mt-8 pb-16">
+        <div className="grid gap-6 md:grid-cols-2">
+          {filtered.map((s) => (
+            <ServiceCard key={s.id} service={s} onQuickQuote={openQuote} />
           ))}
         </div>
 
-        {/* Bottom CTA Section */}
-        <div className="bg-gray-50 rounded-2xl p-12 text-center mt-20 border border-gray-200">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">
-            Start Your Project With Us
-          </h2>
-          <p className="text-gray-600 mb-8 text-lg max-w-2xl mx-auto">
-            Get a free consultation and detailed quote for your steel fabrication project. 
-            We provide expert guidance and quality workmanship for all your requirements.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a 
-              href="/contact" 
-              className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-colors duration-300 shadow-lg hover:shadow-xl"
-            >
-              Get Free Consultation
-            </a>
-            <a 
-              href="tel:+919876543210" 
-              className="border-2 border-gray-300 hover:border-blue-600 text-gray-700 hover:text-blue-700 px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300"
-            >
-              Call Now: +91 98765 43210
-            </a>
-          </div>
+        <div className="mt-12">
+          <ProcessTimeline />
         </div>
 
-        {/* Trust Indicators */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16 text-center">
-          <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
-            <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <span className="text-blue-600 font-bold text-lg">15+</span>
-            </div>
-            <h3 className="font-semibold text-gray-900 mb-2">Years Experience</h3>
-            <p className="text-gray-600 text-sm">Trusted since 2009</p>
+        <aside className="mt-12 bg-gradient-to-r from-blue-600 to-sky-600 text-white rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-4">
+          <div>
+            <h4 className="text-2xl font-extrabold">Start your project with confidence</h4>
+            <p className="mt-1 text-sm opacity-90">Free site visit, detailed estimate and timelines — we handle end-to-end delivery.</p>
           </div>
-          
-          <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
-            <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <span className="text-blue-600 font-bold text-lg">500+</span>
-            </div>
-            <h3 className="font-semibold text-gray-900 mb-2">Projects Completed</h3>
-            <p className="text-gray-600 text-sm">Across Mumbai & Thane</p>
+
+          <div className="flex items-center gap-3">
+            <a href="/contact" className="px-5 py-3 rounded-md bg-white text-blue-600 font-semibold">Schedule Site Visit</a>
+            <a href="tel:+919665181246" className="px-5 py-3 rounded-md border border-white/30">Call: +91 96651 81246</a>
           </div>
-          
-          <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
-            <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <span className="text-blue-600 font-bold text-lg">100%</span>
-            </div>
-            <h3 className="font-semibold text-gray-900 mb-2">Client Satisfaction</h3>
-            <p className="text-gray-600 text-sm">Quality guaranteed</p>
+        </aside>
+
+        <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="bg-white p-6 rounded-lg text-center shadow-sm">
+            <div className="text-3xl font-extrabold">15+</div>
+            <div className="text-sm text-slate-600 mt-1">Years Experience</div>
+          </div>
+          <div className="bg-white p-6 rounded-lg text-center shadow-sm">
+            <div className="text-3xl font-extrabold">500+</div>
+            <div className="text-sm text-slate-600 mt-1">Projects Completed</div>
+          </div>
+          <div className="bg-white p-6 rounded-lg text-center shadow-sm">
+            <div className="text-3xl font-extrabold">100%</div>
+            <div className="text-sm text-slate-600 mt-1">Client Satisfaction</div>
           </div>
         </div>
-      </div>
-    </div>
-  )
+      </section>
+
+      <QuickQuoteModal open={modalOpen} service={activeService} onClose={closeQuote} />
+    </main>
+  );
 }
