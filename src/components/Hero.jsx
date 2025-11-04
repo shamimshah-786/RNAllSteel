@@ -196,7 +196,7 @@ export default function Hero() {
                 <div className="relative group">
                   <div className="relative h-32 sm:h-48 lg:h-56 bg-linear-to-br from-gray-50 to-blue-50 rounded-lg sm:rounded-2xl overflow-hidden shadow-lg group-hover:shadow-xl transition-all duration-500">
                     <img
-                      src="/images/banner3.jpg"
+                      src="/images/staircase-railing.jpg"
                       alt="Staircase Railings"
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
