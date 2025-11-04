@@ -478,6 +478,58 @@ export default function Contact() {
             </div>
           </main>
         </div>
+
+        {/* Map Section (responsive) */}
+        <div className="mt-10">
+          <h3 className="text-lg font-semibold text-slate-900 mb-4">Our Location</h3>
+
+          <div className="rounded-2xl overflow-hidden border border-slate-100 shadow-sm">
+            <div className="w-full aspect-[16/9]">
+              <iframe
+                title="RN All Steel Fabrication Work - Location"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3769.5977662075215!2d73.0530383752066!3d19.12529398208948!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7c11ef7e7c55b%3A0x3dd724fa7f889349!2sR%20N%20ALL%20STEEL%20FABRICATION%20WORK!5e0!3m2!1sen!2sin!4v1762280155663!5m2!1sen!2sin"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen=""
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="w-full h-full"
+              />
+            </div>
+
+            <div className="p-4 bg-white flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <div className="flex items-start gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+                  <FaMapMarkerAlt />
+                </div>
+                <div>
+                  <div className="font-semibold text-slate-900">R N ALL STEEL FABRICATION WORK</div>
+                  <div className="text-sm text-slate-600">Mumbra, Thane, Maharashtra</div>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <a
+                  href="https://www.google.com/maps/dir/?api=1&destination=R+N+ALL+STEEL+FABRICATION+WORK"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-white text-sm font-semibold shadow hover:bg-blue-700"
+                >
+                  Get Directions
+                </a>
+
+                <a
+                  href="tel:+919665181246"
+                  className="inline-flex items-center gap-2 rounded-md border border-slate-200 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
+                >
+                  <FaPhone /> Call
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </section>
   );

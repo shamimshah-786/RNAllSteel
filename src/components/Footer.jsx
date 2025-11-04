@@ -14,6 +14,7 @@ import {
   FaTimes,
   FaCommentDots,
 } from "react-icons/fa";
+import Image from "next/image";
 
 /**
  * Footer with floating message button (bottom-left).
@@ -57,14 +58,20 @@ export default function Footer() {
           <div className="md:col-span-2">
             <div className="flex items-center gap-4 mb-4">
               <div className="relative">
-                <div className="w-14 h-14 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center shadow-lg">
+                {/* <div className="w-14 h-14 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center shadow-lg">
                   <FaHardHat className="text-white text-xl" aria-hidden />
-                </div>
+                </div> */}
+                <Image src={"/images/logo.jpg"}
+                  alt="RN All Steel Fabrication Logo"
+                  width={56}
+                  height={56}
+                  className="rounded-lg object-cover"
+                />
                 <div className="absolute -inset-1 bg-blue-500/10 rounded-xl blur-sm -z-10" />
               </div>
               <div>
-                <h3 className="text-2xl font-extrabold tracking-tight">RN STEEL WORKS</h3>
-                <p className="text-blue-300 font-semibold text-sm">Premium Steel Fabrication</p>
+                <h3 className="text-2xl font-extrabold tracking-tight">RN ALL STEEL</h3>
+                <p className="text-blue-300 font-semibold text-sm">Fabrication Work</p>
               </div>
             </div>
 
@@ -76,13 +83,13 @@ export default function Footer() {
             {/* Social + trust row */}
             <div className="mt-6 flex flex-wrap items-center gap-3">
               <div className="flex items-center gap-3">
-                <Link href="https://facebook.com" aria-label="Facebook">
+                <Link href="https://www.facebook.com/p/R-N-All-fabrication-work-100067881897099/" aria-label="Facebook">
                   <div className="group p-3 rounded-lg bg-gray-800/60 border border-gray-700/40 hover:bg-blue-700/90 transition transform hover:-translate-y-1 inline-flex">
                     <FaFacebook className="w-5 h-5 text-gray-200 group-hover:text-white" />
                   </div>
                 </Link>
 
-                <Link href="https://instagram.com" aria-label="Instagram">
+                <Link href="https://www.instagram.com/shamim_3.0/" aria-label="Instagram">
                   <div className="group p-3 rounded-lg bg-gray-800/60 border border-gray-700/40 hover:bg-pink-500/90 transition transform hover:-translate-y-1 inline-flex">
                     <FaInstagram className="w-5 h-5 text-gray-200 group-hover:text-white" />
                   </div>

@@ -3,16 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { FaBars, FaTimes, FaPhone, FaWhatsapp, FaHardHat, FaEnvelope, FaHome, FaTools, FaFolderOpen } from 'react-icons/fa';
-
-/**
- * Header with improved design and a professional sidebar (drawer).
- * - Next.js App Router friendly client component
- * - Tailwind CSS utilities used for styling and responsiveness
- * - Accessible: keyboard focus, aria attributes, trap for sidebar close on Esc
- * - Scroll progress bar powered by state (no direct style reads in render)
- *
- * Usage: place <Header /> at the top of your layout.
- */
+import Image from 'next/image';
 
 export default function Header() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -69,22 +60,27 @@ export default function Header() {
           ${isScrolled ? 'backdrop-blur-md bg-white shadow-md border-b border-slate-100' : 'bg-white'}`}
         aria-label="Main header"
       >
-        <div className="mx-auto container px-4 sm:px-6 lg:px-8 h-full">
+        <div className="mx-auto container px-2 sm:px-6 lg:px-8 h-full">
           <div className="flex h-full items-center justify-between gap-4">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-3 group" aria-label="RN All Steel - Home">
+            <Link href="/" className="flex items-center gap-2 group" aria-label="RN All Steel - Home">
               <div className="relative">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-sky-600 text-white shadow-lg transition-transform duration-300 group-hover:scale-105">
+                {/* <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-linear-to-br from-blue-600 to-sky-600 text-white shadow-lg transition-transform duration-300 group-hover:scale-105">
                   <FaHardHat className="h-5 w-5" aria-hidden />
-                </div>
+                </div> */}
+                <Image src={"/images/logo.jpg"}
+                  alt="RN All Steel Fabrication Logo"
+                  width={40}
+                  height={40}
+                  className="rounded-xl object-cover transition-transform duration-300 "
+                />
                 <span className="sr-only">RN All Steel Fabrication</span>
               </div>
 
               <div className="flex flex-col leading-tight">
-                <span className="text-lg font-extrabold text-slate-900 tracking-tight transition-colors duration-200 group-hover:text-blue-600">
-                  RN ALL STEEL
+                <span className="text-md sm:text-lg font-extrabold text-slate-800 tracking-tight transition-colors duration-200 group-hover:text-blue-600">
+                  RN ALL STEEL {"Fabrication".toUpperCase()}
                 </span>
-                <span className="text-xs text-slate-500">Fabrication Work</span>
               </div>
             </Link>
 
@@ -165,12 +161,18 @@ export default function Header() {
           {/* Header */}
           <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-sky-600 text-white">
+              {/* <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-sky-600 text-white">
                 <FaHardHat className="h-4 w-4" />
-              </div>
+              </div> */}
+              <Image src={"/images/logo.jpg"}
+                alt="RN All Steel Fabrication Logo"
+                width={40}
+                height={40}
+                className="rounded-xl object-cover transition-transform duration-300 "
+              />
               <div>
                 <div className="text-sm font-bold text-slate-900">RN ALL STEEL</div>
-                <div className="text-xs text-slate-500">Fabrication Word</div>
+                <div className="text-xs text-slate-500">Fabrication Work</div>
               </div>
             </div>
 
