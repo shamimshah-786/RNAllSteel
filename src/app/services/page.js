@@ -289,7 +289,7 @@ function ProcessTimeline() {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {steps.map((s, i) => (
           <div key={i} className="flex gap-4 items-start p-4 rounded-lg bg-slate-50 border">
-            <div className="w-10 h-10 flex items-center justify-center rounded-full bg-blue-600 text-white font-bold">{i + 1}</div>
+            <div className="min-w-8 h-8 flex items-center justify-center rounded-full bg-blue-600 text-white font-bold">{i + 1}</div>
             <div>
               <div className="font-semibold">{s.title}</div>
               <div className="text-sm text-slate-600 mt-1">{s.desc}</div>
