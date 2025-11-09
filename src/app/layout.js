@@ -10,6 +10,16 @@ export const metadata = {
   title: 'RN All Steel Fabrication Work | Mumbai & Thane',
   description: 'Professional steel fabrication services in Mumbai and Thane. Specializing in railings, security doors, gates, industrial structures, and custom metal fabrication.',
   keywords: 'steel fabrication, Mumbai, Thane, railings, security doors, gates, industrial structures, welding',
+  manifest: '/site.webmanifest',
+  icons: {
+    icon: [
+      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/android-chrome-192x192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/android-chrome-512x512.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: '/apple-touch-icon.png',
+  },
 }
 
 export default function RootLayout({ children }) {
@@ -21,7 +31,7 @@ export default function RootLayout({ children }) {
 
         <div className="min-h-screen flex flex-col">
           <Header />
-          <main className="flex-grow page-transition">
+          <main className="grow page-transition">
             {children}
           </main>
           <Footer />

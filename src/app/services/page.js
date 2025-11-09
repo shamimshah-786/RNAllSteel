@@ -218,7 +218,7 @@ function QuickQuoteModal({ open, service, onClose }) {
             <button
               type="submit"
               disabled={submitting}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-gradient-to-br from-blue-600 to-sky-600 text-white"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-linear-to-br from-blue-600 to-sky-600 text-white"
             >
               {submitting ? 'Sending...' : 'Request Quote'}
             </button>
@@ -263,7 +263,7 @@ function ServiceCard({ service, onQuickQuote }) {
             View Related Projects <FaChevronRight />
           </a>
 
-          <button onClick={() => onQuickQuote(service)} className="ml-auto inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-br from-blue-600 to-sky-600 text-white rounded-md text-sm">
+          <button onClick={() => onQuickQuote(service)} className="ml-auto inline-flex items-center gap-2 px-4 py-2 bg-linear-to-br from-blue-600 to-sky-600 text-white rounded-md text-sm">
             Quick Quote
           </button>
         </div>
@@ -321,7 +321,7 @@ export default function Services() {
 
   return (
     <main className="bg-slate-50 min-h-screen">
-      <section className="bg-gradient-to-r from-white to-slate-50 py-20">
+      <section className="bg-linear-to-r from-white to-slate-50 py-20">
         <div className="container mx-auto px-4">
           <div className="grid gap-8 lg:grid-cols-2 items-center">
             <div>
@@ -360,7 +360,7 @@ export default function Services() {
                 placeholder="blur"
                 blurDataURL="/_next/image/placeholder.png"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+              <div className="absolute inset-0 bg-linear-to-t from-black/30 to-transparent" />
             </div>
           </div>
         </div>
@@ -395,7 +395,7 @@ export default function Services() {
           <ProcessTimeline />
         </div>
 
-        <aside className="mt-12 bg-gradient-to-r from-blue-600 to-sky-600 text-white rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-4">
+        <aside className="mt-12 bg-linear-to-r from-blue-600 to-sky-600 text-white rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-4">
           <div>
             <h4 className="text-2xl font-extrabold">Start your project with confidence</h4>
             <p className="mt-1 text-sm opacity-90">Free site visit, detailed estimate and timelines — we handle end-to-end delivery.</p>
