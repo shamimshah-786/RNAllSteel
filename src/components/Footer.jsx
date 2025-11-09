@@ -89,7 +89,7 @@ export default function Footer() {
                   </div>
                 </Link>
 
-                <Link href="https://www.instagram.com/shamim_3.0/" aria-label="Instagram">
+                <Link href="https://www.instagram.com/rnallsteelfabrication" aria-label="Instagram">
                   <div className="group p-3 rounded-lg bg-gray-800/60 border border-gray-700/40 hover:bg-pink-500/90 transition transform hover:-translate-y-1 inline-flex">
                     <FaInstagram className="w-5 h-5 text-gray-200 group-hover:text-white" />
                   </div>
