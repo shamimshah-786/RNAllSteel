@@ -202,7 +202,7 @@ export default function Footer() {
             <div className="flex items-center gap-2">
               <div className="text-sm text-gray-400 block">Managed & Designed by</div>
               <Link href="https://rbmstudios.vercel.app" aria-label="RBM Studios (opens in new tab)">
-                <div className="text-sm font-semibold text-gray-200 hover:text-white hover:underline active:underline transition">RBM Studios</div>
+                <div className="text-sm font-semibold hover:text-blue-400 text-gray-200   active:text-blue-400  transition">RBM Studios</div>
               </Link>
             </div>
           </div>
