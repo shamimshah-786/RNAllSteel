@@ -1,15 +1,19 @@
-import { Inter } from 'next/font/google'
-import './globals.css'
-import Header from '../components/Header'
-import Footer from '../components/Footer'
-import TopProgress from '../components/TopProgress'
+import { Inter } from 'next/font/google';
+import './globals.css';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import TopProgress from '../components/TopProgress';
+import Script from 'next/script';
+import Analytics from '../components/Analytics';
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
   title: 'RN All Steel Fabrication Work | Mumbai & Thane',
-  description: 'Professional steel fabrication services in Mumbai and Thane. Specializing in railings, security doors, gates, industrial structures, and custom metal fabrication.',
-  keywords: 'steel fabrication, Mumbai, Thane, railings, security doors, gates, industrial structures, welding',
+  description:
+    'Professional steel fabrication services in Mumbai and Thane. Specializing in railings, security doors, gates, industrial structures, and custom metal fabrication.',
+  keywords:
+    'steel fabrication, Mumbai, Thane, railings, security doors, gates, industrial structures, welding',
   manifest: '/site.webmanifest',
   icons: {
     icon: [
@@ -20,7 +24,9 @@ export const metadata = {
     ],
     apple: '/apple-touch-icon.png',
   },
-}
+};
+
+const GA_ID = 'G-ENV5PX5G62';
 
 export default function RootLayout({ children }) {
   return (
@@ -29,14 +35,34 @@ export default function RootLayout({ children }) {
         {/* Top progress loader (client component) */}
         <TopProgress />
 
+        {/* Google Analytics (gtag) - loads only when NEXT_PUBLIC_GA_ID is set */}
+        {GA_ID && GA_ID !== 'G-ENV5PX5G62' && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="gtag-init" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${GA_ID}', {
+                  page_path: window.location.pathname,
+                });
+              `}
+            </Script>
+            {/* Analytics client component to send subsequent page_view events on client-side navigation */}
+            <Analytics />
+          </>
+        )}
+
         <div className="min-h-screen flex flex-col">
           <Header />
-          <main className="grow page-transition">
-            {children}
-          </main>
+          <main className="grow page-transition">{children}</main>
           <Footer />
         </div>
       </body>
     </html>
-  )
+  );
 }
