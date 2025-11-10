@@ -4,7 +4,6 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import TopProgress from '../components/TopProgress';
 import Script from 'next/script';
-import Analytics from '../components/Analytics';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -26,8 +25,6 @@ export const metadata = {
   },
 };
 
-const GA_ID = 'G-ENV5PX5G62';
-
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
@@ -35,11 +32,10 @@ export default function RootLayout({ children }) {
         {/* Top progress loader (client component) */}
         <TopProgress />
 
-        {/* Google Analytics (gtag) - loads only when NEXT_PUBLIC_GA_ID is set */}
-        {GA_ID && GA_ID !== 'G-XXXXXXX' && (
+        { (
           <>
             <Script
-              src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+              src={`https://www.googletagmanager.com/gtag/js?id=G-ENV5PX5G62`}
               strategy="afterInteractive"
             />
             <Script id="gtag-init" strategy="afterInteractive">
@@ -47,13 +43,11 @@ export default function RootLayout({ children }) {
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}
                 gtag('js', new Date());
-                gtag('config', '${GA_ID}', {
+                gtag('config', 'G-ENV5PX5G62', {
                   page_path: window.location.pathname,
                 });
               `}
             </Script>
-            {/* Analytics client component to send subsequent page_view events on client-side navigation */}
-            <Analytics />
           </>
         )}
 
