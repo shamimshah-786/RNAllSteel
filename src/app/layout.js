@@ -36,7 +36,7 @@ export default function RootLayout({ children }) {
         <TopProgress />
 
         {/* Google Analytics (gtag) - loads only when NEXT_PUBLIC_GA_ID is set */}
-        {GA_ID && GA_ID !== 'G-ENV5PX5G62' && (
+        {GA_ID && GA_ID !== 'G-XXXXXXX' && (
           <>
             <Script
               src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
