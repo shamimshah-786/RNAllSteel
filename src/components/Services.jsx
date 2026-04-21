@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { FaRulerCombined, FaDoorClosed, FaShieldAlt, FaUtensils, FaIndustry, FaTools, FaArrowRight } from 'react-icons/fa'
 
 const services = [
@@ -113,10 +114,10 @@ export default function Services() {
                 </p>
                 
                 {/* CTA Button */}
-                <button className="flex items-center gap-2 text-blue-600 font-semibold hover:text-blue-700 transition-all duration-300 group/btn">
+                <Link href="/services" className="flex items-center gap-2 text-blue-600 font-semibold hover:text-blue-700 transition-all duration-300 group/btn">
                   <span>Explore Service</span>
                   <FaArrowRight className="w-4 h-4 transform group-hover/btn:translate-x-1 transition-transform duration-300" />
-                </button>
+                </Link>
               </div>
 
               {/* Hover Effect Border */}
