@@ -6,7 +6,7 @@ export default function AboutSection() {
       icon: FaAward,
       value: "15+",
       label: "Years Experience",
-      description: "Trusted since 2009"
+      description: "Trusted since 2010"
     },
     {
       icon: FaUsers,
