@@ -3,7 +3,15 @@ import path         from 'path';
 import matter       from 'gray-matter';
 import readingTime  from 'reading-time';
 
+// lib/blog.js ke top pe — BLOG_DIR ke baad
 const BLOG_DIR = path.join(process.cwd(), 'src/content/blog');
+// ✅ Build time pe warn karo taaki Vercel logs mein dikh sake
+if (!fs.existsSync(BLOG_DIR)) {
+  console.warn(
+    `⚠️  [blog.js] BLOG_DIR not found at: ${BLOG_DIR}\n` +
+    `   Make sure src/content/blog/ is committed to git and not in .gitignore`
+  );
+}
 
 /* ─────────────────────────────────────────────
    getAllPosts — metadata only (no raw content)
