@@ -1,156 +1,184 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useRef } from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { FaChevronLeft, FaChevronRight, FaTimes, FaExternalLinkAlt } from 'react-icons/fa';
+import { useState, useEffect, useRef, useCallback } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import {
+  FaChevronLeft,
+  FaChevronRight,
+  FaTimes,
+  FaArrowRight,
+  FaWhatsapp,
+  FaPhone,
+  FaPlay,
+} from "react-icons/fa";
+import { HiArrowUpRight } from "react-icons/hi2";
 
-/**
- * Featured Projects section with a professionally redesigned and responsive popup viewer.
- * - Fixes modal content getting cut off on small screens.
- * - The modal now uses a flexible layout that scrolls on mobile if content is tall.
- * - Retains accessibility features: keyboard navigation, focus management, and touch-swipe support.
- *
- * Usage: Import and render <FeaturedProjects /> on your home page.
- */
-
-// A curated selection from your main `allProjects` list
 const featuredProjects = [
-  { id: 12, src: '/projects/main-gates/wrought-iron-designer-main-gate-gold.webp', title: 'Wrought Iron Designer Main Gate', category: 'Main Gates' },
-  { id: 16, src: '/projects/railings/ss-balcony-railing-designer.webp', title: 'SS Balcony Railing with Designer Panels', category: 'Railings' },
-  { id: 3, src: '/projects/window-grills/stainless-steel-window-grill-modern.webp', title: 'Modern Stainless Steel Window Grill', category: 'Window Grills' },
-  { id: 13, src: '/projects/main-gates/laser-cut-steel-main-gate.webp', title: 'Modern Laser Cut Steel Main Gate', category: 'Main Gates' },
-  { id: 17, src: '/projects/main-doors/ss-main-door-wooden-finish.webp', title: 'SS Main Door with Wooden Finish', category: 'Main Doors' },
-  { id: 21, src: '/projects/railings/ss-mezzanine-railing-metal-stairs.webp', title: 'Stainless Steel Mezzanine Railing', category: 'Railings' },
-  { id: 8, src: '/projects/collapsible-gates/collapsible-steel-gate.webp', title: 'Collapsible Steel Gate', category: 'Collapsible Gates' },
-  { id: 22, src: '/projects/railings/ss-bungalow-balcony-railing-window-grill.jpg', title: 'SS Railings and Window Grills for Modern Bungalow', category: 'Railings' },
+  { id: 12, src: "/projects/main-gates/wrought-iron-designer-main-gate-gold.webp",   title: "Wrought Iron Designer Main Gate",                 category: "Main Gates",        tag: "Residential" },
+  { id: 16, src: "/projects/railings/ss-balcony-railing-designer.webp",              title: "SS Balcony Railing with Designer Panels",          category: "Railings",          tag: "Luxury" },
+  { id: 3,  src: "/projects/window-grills/stainless-steel-window-grill-modern.webp", title: "Modern Stainless Steel Window Grill",              category: "Window Grills",     tag: "Modern" },
+  { id: 13, src: "/projects/main-gates/laser-cut-steel-main-gate.webp",              title: "Modern Laser Cut Steel Main Gate",                 category: "Main Gates",        tag: "Custom" },
+  { id: 17, src: "/projects/main-doors/ss-main-door-wooden-finish.webp",             title: "SS Main Door with Wooden Finish",                  category: "Main Doors",        tag: "Premium" },
+  { id: 21, src: "/projects/railings/ss-mezzanine-railing-metal-stairs.webp",        title: "Stainless Steel Mezzanine Railing",                category: "Railings",          tag: "Industrial" },
+  { id: 8,  src: "/projects/collapsible-gates/collapsible-steel-gate.webp",          title: "Collapsible Steel Gate",                          category: "Collapsible Gates", tag: "Security" },
+  { id: 22, src: "/projects/railings/ss-bungalow-balcony-railing-window-grill.jpg",  title: "SS Railings & Window Grills for Bungalow",         category: "Railings",          tag: "Bungalow" },
 ];
 
-// Reusable, redesigned, and responsive modal component for the image viewer
-function ProjectViewerModal({ projects, selectedIndex, onClose, onNext, onPrev }) {
-  const closeButtonRef = useRef(null);
-  const touchStartX = useRef(null);
-  const [isMounted, setIsMounted] = useState(false);
-  const project = projects[selectedIndex];
+/* ══════════════════════════ MODAL ══════════════════════════ */
+function Modal({ projects, index, onClose, onNext, onPrev }) {
+  const closeRef = useRef(null);
+  const touchX   = useRef(null);
+  const [show, setShow] = useState(false);
+  const p = projects[index];
 
-  // Handle keyboard navigation and focus trapping
+  useEffect(() => { const id = requestAnimationFrame(() => setShow(true)); return () => cancelAnimationFrame(id); }, []);
+
   useEffect(() => {
-    if (selectedIndex === -1) return;
-    
-    setIsMounted(true);
-    setTimeout(() => closeButtonRef.current?.focus(), 100);
-
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape') onClose();
-      if (e.key === 'ArrowRight') onNext();
-      if (e.key === 'ArrowLeft') onPrev();
+    const fn = (e) => {
+      if (e.key === "Escape")     onClose();
+      if (e.key === "ArrowRight") onNext();
+      if (e.key === "ArrowLeft")  onPrev();
     };
+    window.addEventListener("keydown", fn);
+    return () => window.removeEventListener("keydown", fn);
+  }, [onClose, onNext, onPrev]);
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [selectedIndex, onClose, onNext, onPrev]);
-
-  // Handle touch swipe navigation
   useEffect(() => {
-    const onTouchStart = (e) => touchStartX.current = e.touches?.[0]?.clientX ?? null;
-    const onTouchEnd = (e) => {
-      if (touchStartX.current == null) return;
-      const endX = e.changedTouches?.[0]?.clientX ?? null;
-      if (endX == null) return;
-      const diff = touchStartX.current - endX;
-      if (Math.abs(diff) > 40) { // Swipe threshold
-        if (diff > 0) onNext(); else onPrev();
-      }
-      touchStartX.current = null;
+    const s = (e) => (touchX.current = e.touches?.[0]?.clientX ?? null);
+    const e = (ev) => {
+      if (!touchX.current) return;
+      const d = touchX.current - (ev.changedTouches?.[0]?.clientX ?? 0);
+      if (Math.abs(d) > 44) d > 0 ? onNext() : onPrev();
+      touchX.current = null;
     };
-    if (selectedIndex !== -1) {
-      window.addEventListener('touchstart', onTouchStart, { passive: true });
-      window.addEventListener('touchend', onTouchEnd, { passive: true });
-    }
-    return () => {
-      window.removeEventListener('touchstart', onTouchStart);
-      window.removeEventListener('touchend', onTouchEnd);
-    };
-  }, [selectedIndex, onNext, onPrev]);
+    window.addEventListener("touchstart", s, { passive: true });
+    window.addEventListener("touchend",   e, { passive: true });
+    return () => { window.removeEventListener("touchstart", s); window.removeEventListener("touchend", e); };
+  }, [onNext, onPrev]);
 
-  if (!project) return null;
+  useEffect(() => { const t = setTimeout(() => closeRef.current?.focus(), 80); return () => clearTimeout(t); }, [index]);
+
+  if (!p) return null;
 
   return (
     <div
-      role="dialog"
-      aria-modal="true"
-      aria-label={`Image viewer: ${project.title}`}
-      className={`fixed inset-0 z-50 flex items-center justify-center p-4 transition-opacity duration-300 ${isMounted ? 'opacity-100' : 'opacity-0'}`}
+      role="dialog" aria-modal="true" aria-label={`Viewing: ${p.title}`}
+      className={`fixed inset-0 z-50 flex items-end sm:items-center justify-center transition-opacity duration-300 ${show ? "opacity-100" : "opacity-0"}`}
     >
-      {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={onClose} />
+      <div className="absolute inset-0 bg-black/75 backdrop-blur-md" onClick={onClose} />
 
-      {/* Main viewer card with animation and responsive layout */}
-      <div className={`relative z-10 w-full max-w-6xl max-h-[90vh] rounded-2xl bg-slate-800 ring-1 ring-white/10 shadow-2xl transition-all duration-300 flex flex-col md:flex-row ${isMounted ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}>
-        {/* Close Button - positioned relative to the card */}
-        <button
-          ref={closeButtonRef}
-          onClick={onClose}
-          aria-label="Close viewer"
-          className="absolute -top-3 -right-3 z-20 bg-slate-700 text-white rounded-full p-2 shadow-lg hover:bg-slate-600 transition"
-        >
-          <FaTimes className="w-5 h-5" />
-        </button>
+      <div className={`relative z-10 w-full sm:max-w-5xl sm:mx-4 bg-white sm:rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row transition-all duration-300 ${show ? "translate-y-0 scale-100" : "translate-y-8 sm:scale-95"}`}
+        style={{ maxHeight: "92dvh" }}>
 
-        {/* Image Display Area (Left side on desktop) */}
-        <div className="relative w-full md:w-8/12 bg-black/20 md:rounded-l-2xl flex items-center justify-center p-4">
-          <div className="relative w-full  max-h-[50vh] h-[300px] md:h-[400px] lg:h-[500px] md:max-h-[80vh]">
-            <Image
-              src={project.src}
-              alt={project.title}
-              fill
-              sizes="(max-width: 768px) 100vw, 66vw"
-              className="object-contain"
-              priority
-            />
+        {/* Image side */}
+        <div className="relative w-full md:w-[55%] flex-shrink-0 bg-gray-100 overflow-hidden">
+          <div className="relative w-full" style={{ paddingTop: "clamp(280px, 65vw, 540px)" }}>
+            <Image src={p.src} alt={p.title} fill sizes="(max-width:768px) 100vw, 55vw" className="object-cover" priority />
           </div>
-           {/* Prev/Next buttons on top of the image */}
-          <button
-            onClick={onPrev}
-            aria-label="Previous image"
-            className="absolute left-3 top-1/2 -translate-y-1/2 bg-black/30 text-white rounded-full p-3 hover:bg-black/50 transition"
-          >
-            <FaChevronLeft className="w-5 h-5" />
+          {/* Gradient bottom */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+
+          {/* Nav arrows */}
+          <button onClick={onPrev} aria-label="Previous"
+            className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 hover:bg-white text-gray-800 rounded-full flex items-center justify-center shadow-md transition-all duration-200">
+            <FaChevronLeft className="text-sm" />
           </button>
-          <button
-            onClick={onNext}
-            aria-label="Next image"
-            className="absolute right-3 top-1/2 -translate-y-1/2 bg-black/30 text-white rounded-full p-3 hover:bg-black/50 transition"
-          >
-            <FaChevronRight className="w-5 h-5" />
+          <button onClick={onNext} aria-label="Next"
+            className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 hover:bg-white text-gray-800 rounded-full flex items-center justify-center shadow-md transition-all duration-200">
+            <FaChevronRight className="text-sm" />
           </button>
+
+          {/* Bottom info bar */}
+          <div className="absolute bottom-0 left-0 right-0 px-5 py-4 flex items-end justify-between">
+            <div>
+              <span className="inline-block bg-blue-600 text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full mb-1.5">
+                {p.category}
+              </span>
+              <p className="text-white font-bold text-base leading-snug drop-shadow">{p.title}</p>
+            </div>
+            <span className="text-white/60 text-xs font-bold tabular-nums flex-shrink-0 ml-3">
+              {String(index + 1).padStart(2, "0")}&nbsp;/&nbsp;{String(projects.length).padStart(2, "0")}
+            </span>
+          </div>
         </div>
 
-        {/* Info Panel (Right side on desktop) */}
-        <div className="w-full md:w-4/12 p-6 flex flex-col overflow-y-auto">
-          <h3 className="text-xl font-bold text-white">{project.title}</h3>
-          <p className="text-sm text-sky-300 mt-1">{project.category}</p>
-          <p className="text-xs text-slate-400 mt-4">
-            {selectedIndex + 1} of {projects.length}
-          </p>
-
-          <div className="mt-6 hidden md:block border-t border-slate-700 pt-6 text-sm text-slate-300">
-            <p>High-quality fabrication tailored to your exact specifications. This project showcases our expertise in {project.category.toLowerCase()}.</p>
+        {/* Info side */}
+        <div className="flex flex-col w-full md:w-[45%] overflow-y-auto">
+          {/* Header */}
+          <div className="flex items-center justify-between px-6 pt-5 pb-4 border-b border-gray-100">
+            <div>
+              <span className="text-[10px] font-extrabold text-gray-400 uppercase tracking-[0.2em]">
+                Project Details
+              </span>
+            </div>
+            <button ref={closeRef} onClick={onClose} aria-label="Close"
+              className="w-8 h-8 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition-colors duration-150">
+              <FaTimes className="text-gray-500 text-xs" />
+            </button>
           </div>
-          
-          <div className="mt-auto pt-6 space-y-3">
-            <a 
-              href="/contact"
-              className="w-full inline-flex items-center justify-center gap-2 rounded-md bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow hover:bg-blue-700 transition"
-            >
-              Request a Quote
+
+          <div className="flex-1 px-6 py-5 space-y-5">
+            {/* Tag + title */}
+            <div>
+              <span className="inline-block text-[10px] font-bold text-blue-600 uppercase tracking-wider bg-blue-50 border border-blue-100 px-2.5 py-1 rounded-full mb-2">
+                {p.tag}
+              </span>
+              <h3 className="text-xl font-bold text-gray-900 leading-snug">{p.title}</h3>
+            </div>
+
+            <p className="text-sm text-gray-500 leading-relaxed">
+              Precision-fabricated <strong className="text-gray-700 font-semibold">{p.category.toLowerCase()}</strong> using
+              premium SS 304 / mild steel. Finished to the highest standards — built to last, designed to impress.
+            </p>
+
+            {/* Specs */}
+            <div className="grid grid-cols-2 gap-2">
+              {[
+                { k: "Material",   v: "SS 304 / MS" },
+                { k: "Finish",     v: "Mirror / Matte" },
+                { k: "Lead Time",  v: "15–20 Days" },
+                { k: "Warranty",   v: "2 Years" },
+              ].map((s) => (
+                <div key={s.k} className="rounded-xl border border-gray-100 bg-gray-50 px-3.5 py-3">
+                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-0.5">{s.k}</p>
+                  <p className="text-sm font-bold text-gray-800">{s.v}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Filmstrip */}
+            <div>
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-2.5">More Work</p>
+              <div className="flex gap-2 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
+                {projects.map((proj, i) => (
+                  <button key={proj.id} onClick={() => { const d = i - index; if (!d) return; const fn = d > 0 ? onNext : onPrev; for (let x = 0; x < Math.abs(d); x++) fn(); }}
+                    aria-label={proj.title}
+                    className={`relative flex-shrink-0 w-11 h-11 rounded-lg overflow-hidden border-2 transition-all duration-200 ${i === index ? "border-blue-600 ring-2 ring-blue-200" : "border-gray-200 opacity-50 hover:opacity-80"}`}>
+                    <Image src={proj.src} alt={proj.title} fill sizes="44px" className="object-cover" />
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* CTAs */}
+          <div className="px-6 py-5 border-t border-gray-100 space-y-2.5">
+            <a href="https://wa.me/919665181246" target="_blank" rel="noopener noreferrer"
+              className="w-full inline-flex items-center justify-center gap-2.5 bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-xl font-bold text-sm transition-colors duration-200 shadow-md">
+              <FaWhatsapp className="text-green-300 text-base" />
+              Request Similar Work
             </a>
-            <Link 
-              href="/projects"
-              className="w-full inline-flex items-center justify-center gap-2 rounded-md bg-slate-700 px-4 py-2.5 text-sm font-medium text-white hover:bg-slate-600 transition"
-            >
-              View All Projects <FaExternalLinkAlt className="w-3 h-3" />
-            </Link>
+            <div className="grid grid-cols-2 gap-2">
+              <a href="tel:+919665181246"
+                className="inline-flex items-center justify-center gap-1.5 border border-gray-200 hover:border-blue-400 hover:bg-blue-50 text-gray-700 hover:text-blue-700 px-4 py-2.5 rounded-xl font-semibold text-sm transition-colors duration-200">
+                <FaPhone className="text-xs" /> Call Now
+              </a>
+              <Link href="/projects"
+                className="inline-flex items-center justify-center gap-1.5 border border-gray-200 hover:border-gray-400 text-gray-700 px-4 py-2.5 rounded-xl font-semibold text-sm transition-colors duration-200">
+                All Projects <FaArrowRight className="text-xs" />
+              </Link>
+            </div>
           </div>
         </div>
       </div>
@@ -158,105 +186,206 @@ function ProjectViewerModal({ projects, selectedIndex, onClose, onNext, onPrev }
   );
 }
 
+/* ══════════════════════════ CARD VARIANTS ══════════════════════════ */
 
-function ProjectCard({ project, onClick, priority }) {
+/* Large hero card — landscape, used for featured slot */
+function HeroCard({ project, onClick, priority }) {
   return (
-    <button
-      onClick={onClick}
-      className="group relative block w-full rounded-2xl overflow-hidden shadow-md hover:shadow-xl transform transition-all duration-300"
-      aria-label={`View project: ${project.title}`}
-    >
-      <div className="relative w-full pt-[125%] bg-slate-100">
-        <Image
-          src={project.src}
-          alt={project.title}
-          fill
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          className="object-cover transition-transform duration-500 group-hover:scale-105"
-          placeholder="blur"
-          blurDataURL="/_next/image/placeholder.png"
-          priority={priority}
-        />
+    <button onClick={onClick} aria-label={`View: ${project.title}`}
+      className="group relative block w-full rounded-2xl overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2">
+      <div className="relative w-full pt-[58%] bg-gray-200">
+        <Image src={project.src} alt={project.title} fill
+          sizes="(max-width:768px) 100vw, 66vw"
+          className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+          priority={priority} />
       </div>
-      <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-4">
-        <h3 className="text-white text-base font-semibold line-clamp-2">{project.title}</h3>
-        <p className="text-sm text-sky-200 mt-1">{project.category}</p>
+      <div className="absolute inset-0 bg-gradient-to-t from-gray-950/80 via-gray-950/10 to-transparent" />
+      {/* Hover tint */}
+      <div className="absolute inset-0 bg-blue-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      {/* Arrow badge top-right on hover */}
+      <div className="absolute top-4 right-4 w-9 h-9 bg-white rounded-xl flex items-center justify-center shadow-md opacity-0 group-hover:opacity-100 -translate-y-1 group-hover:translate-y-0 transition-all duration-300">
+        <HiArrowUpRight className="text-gray-900 text-sm" />
+      </div>
+      {/* Category */}
+      <div className="absolute top-4 left-4">
+        <span className="inline-block bg-white text-gray-900 text-[10px] font-extrabold uppercase tracking-wider px-3 py-1.5 rounded-full shadow-sm">
+          {project.category}
+        </span>
+      </div>
+      {/* Bottom */}
+      <div className="absolute bottom-0 left-0 right-0 p-5">
+        <p className="text-white font-bold text-lg sm:text-xl leading-snug drop-shadow-sm">
+          {project.title}
+        </p>
+        <p className="mt-1.5 text-white/60 text-xs font-semibold flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <span className="w-4 h-px bg-blue-400" />
+          View Project
+        </p>
       </div>
     </button>
   );
 }
 
+/* Small square card */
+function SmallCard({ project, onClick, priority }) {
+  return (
+    <button onClick={onClick} aria-label={`View: ${project.title}`}
+      className="group relative block w-full rounded-2xl overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2">
+      <div className="relative w-full pt-[110%] bg-gray-200">
+        <Image src={project.src} alt={project.title} fill
+          sizes="(max-width:640px) 50vw, (max-width:1024px) 33vw, 25vw"
+          className="object-cover transition-transform duration-700 group-hover:scale-[1.06]"
+          priority={priority} />
+      </div>
+      <div className="absolute inset-0 bg-gradient-to-t from-gray-950/80 via-gray-950/5 to-transparent" />
+      <div className="absolute inset-0 bg-blue-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      <div className="absolute top-3 right-3 w-7 h-7 bg-white rounded-lg flex items-center justify-center shadow-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+        <HiArrowUpRight className="text-gray-900 text-xs" />
+      </div>
+      <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4">
+        <span className="inline-block text-[9px] font-bold text-white/70 uppercase tracking-wider mb-1">
+          {project.category}
+        </span>
+        <p className="text-white font-semibold text-sm leading-snug line-clamp-2">
+          {project.title}
+        </p>
+      </div>
+    </button>
+  );
+}
+
+/* ══════════════════════════ MAIN ══════════════════════════ */
 export default function FeaturedProjects() {
-  const [selectedIndex, setSelectedIndex] = useState(-1);
-  const totalProjects = featuredProjects.length;
+  const [idx, setIdx] = useState(-1);
+  const total = featuredProjects.length;
 
-  const openViewer = (index) => setSelectedIndex(index);
-  const closeViewer = () => setSelectedIndex(-1);
-  const showNext = () => setSelectedIndex((i) => (i + 1) % totalProjects);
-  const showPrev = () => setSelectedIndex((i) => (i - 1 + totalProjects) % totalProjects);
+  const open  = useCallback((i) => setIdx(i), []);
+  const close = useCallback(() => setIdx(-1), []);
+  const next  = useCallback(() => setIdx((i) => (i + 1) % total), [total]);
+  const prev  = useCallback(() => setIdx((i) => (i - 1 + total) % total), [total]);
 
-  // Effect to lock body scroll when modal is open
   useEffect(() => {
-    if (selectedIndex > -1) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [selectedIndex]);
+    document.body.style.overflow = idx > -1 ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [idx]);
 
   return (
-    <section className="bg-white pb-16 sm:pb-20">
-      <div className="container mx-auto px-4">
-        {/* Header */}
-        <div className="text-center mb-10">
-          <p className="inline-flex items-center gap-2 rounded-full bg-blue-50 px-3 py-1 text-sm font-semibold text-blue-700 mb-4">
-            Our Work
-          </p>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900">
-            A Glimpse of Our Projects
-          </h2>
-          <div className="mt-3 mx-auto h-1 w-24 rounded bg-gradient-to-r from-blue-600 to-sky-600" />
-          <p className="mt-4 text-slate-600 max-w-2xl mx-auto">
-            From residential railings to large-scale industrial structures, our work speaks for itself. Explore a selection of projects showcasing our commitment to quality.
-          </p>
-        </div>
+    <section className="bg-gray-50 py-16 sm:py-20 lg:py-28">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
 
-        {/* Masonry-style grid */}
-        <div className="columns-2 sm:columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
-          {featuredProjects.map((project, idx) => (
-            <div key={project.id} className="break-inside-avoid">
-              <ProjectCard
-                project={project}
-                onClick={() => openViewer(idx)}
-                priority={idx < 4}
-              />
+        {/* ── HEADER ── */}
+        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 mb-10 sm:mb-14">
+          <div className="max-w-xl">
+            <span className="inline-flex items-center gap-2.5 text-blue-600 text-xs font-extrabold uppercase tracking-[0.22em] mb-5">
+              <span className="w-8 h-[2px] bg-blue-600 rounded-full" />
+              Our Work
+            </span>
+            <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 leading-[1.08]">
+              500+ Projects.
+              <br />
+              <span className="text-blue-600">One Standard.</span>
+              <br />
+              Excellence.
+            </h2>
+            <p className="mt-4 text-gray-500 text-base leading-relaxed">
+              Every project below was designed, fabricated, and installed by
+              our team — across homes and commercial sites in Mumbai &amp; Thane.
+            </p>
+          </div>
+
+          <div className="flex flex-col gap-4 lg:items-end flex-shrink-0">
+            {/* Stats strip */}
+            <div className="flex items-stretch gap-px bg-gray-200 rounded-2xl overflow-hidden border border-gray-200 shadow-sm">
+              {[
+                { v: "500+", l: "Projects" },
+                { v: "15+",  l: "Years" },
+                { v: "5.0★", l: "Rating" },
+              ].map((s, i) => (
+                <div key={i} className="flex flex-col items-center justify-center bg-white px-5 py-3 first:rounded-l-2xl last:rounded-r-2xl">
+                  <p className="text-lg font-bold text-gray-900 tabular-nums leading-none">{s.v}</p>
+                  <p className="text-[10px] text-gray-400 font-semibold mt-0.5 uppercase tracking-wider">{s.l}</p>
+                </div>
+              ))}
             </div>
-          ))}
+
+            <Link href="/projects"
+              className="inline-flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white px-6 py-3 rounded-xl font-bold text-sm transition-colors duration-200 group">
+              Full Portfolio
+              <HiArrowUpRight className="text-sm group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
+            </Link>
+          </div>
         </div>
 
-        {/* CTA Button */}
-        <div className="mt-12 text-center">
-          <Link
-            href="/projects"
-            className="inline-flex items-center gap-3 rounded-lg bg-gradient-to-br from-blue-600 to-sky-600 px-6 py-3 text-white font-semibold shadow-lg hover:from-blue-700 hover:to-sky-700 transition-transform active:scale-95"
-          >
-            View All Projects
-          </Link>
+        {/* ── GRID ── */}
+        {/* Layout:
+            Row 1: [Hero ×2 cols] [Small] [Small]
+            Row 2: [Small] [Small] [Hero ×2 cols]
+            Row 3: [Small] [Small] [CTA ×2 cols]         */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+
+          {/* R1 */}
+          <div className="col-span-2">
+            <HeroCard project={featuredProjects[0]} onClick={() => open(0)} priority />
+          </div>
+          <div className="col-span-1">
+            <SmallCard project={featuredProjects[1]} onClick={() => open(1)} priority />
+          </div>
+          <div className="col-span-1">
+            <SmallCard project={featuredProjects[2]} onClick={() => open(2)} priority />
+          </div>
+
+          {/* R2 */}
+          <div className="col-span-1">
+            <SmallCard project={featuredProjects[3]} onClick={() => open(3)} />
+          </div>
+          <div className="col-span-1">
+            <SmallCard project={featuredProjects[4]} onClick={() => open(4)} />
+          </div>
+          <div className="col-span-2">
+            <HeroCard project={featuredProjects[5]} onClick={() => open(5)} />
+          </div>
+
+          {/* R3 */}
+          <div className="col-span-1">
+            <SmallCard project={featuredProjects[6]} onClick={() => open(6)} />
+          </div>
+          <div className="col-span-1">
+            <SmallCard project={featuredProjects[7]} onClick={() => open(7)} />
+          </div>
+
+          {/* CTA TILE */}
+          <div className="col-span-2 rounded-2xl border-2 border-dashed border-blue-200 bg-blue-50/60 p-6 sm:p-8 flex flex-col justify-between min-h-[200px]">
+            <div>
+              <span className="inline-block text-[10px] font-extrabold text-blue-600 uppercase tracking-[0.2em] mb-3">
+                Get Started Today
+              </span>
+              <p className="text-gray-900 font-bold text-xl sm:text-2xl leading-snug max-w-xs">
+                Want work like this at your home or office?
+              </p>
+              <p className="mt-2 text-gray-500 text-sm">
+                Free site visit · Transparent pricing · Mumbai &amp; Thane
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-2.5 mt-6">
+              <a href="https://wa.me/919665181246" target="_blank" rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl font-bold text-sm transition-colors duration-200 shadow-md">
+                <FaWhatsapp className="text-green-300 text-base" />
+                WhatsApp Now
+              </a>
+              <a href="tel:+919665181246"
+                className="inline-flex items-center justify-center gap-2 bg-white border border-gray-200 hover:border-blue-400 hover:bg-blue-50 text-gray-800 hover:text-blue-700 px-5 py-3 rounded-xl font-bold text-sm transition-colors duration-200">
+                <FaPhone className="text-xs" />
+                Call Direct
+              </a>
+            </div>
+          </div>
+
         </div>
       </div>
 
-      {/* Render the modal */}
-      {selectedIndex > -1 && (
-        <ProjectViewerModal
-          projects={featuredProjects}
-          selectedIndex={selectedIndex}
-          onClose={closeViewer}
-          onNext={showNext}
-          onPrev={showPrev}
-        />
+      {idx > -1 && (
+        <Modal projects={featuredProjects} index={idx}
+          onClose={close} onNext={next} onPrev={prev} />
       )}
     </section>
   );
