@@ -77,7 +77,7 @@ const SOCIALS = [
     hover: "hover:bg-blue-700 hover:border-blue-600",
   },
   {
-    href: "https://www.instagram.com/rnallsteelfabrication",
+    href: "https://www.instagram.com/rn_all_steel_fabrication",
     label: "Instagram",
     icon: FaInstagram,
     hover: "hover:bg-gradient-to-br hover:from-pink-500 hover:to-orange-400 hover:border-pink-500",
