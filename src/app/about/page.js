@@ -1,16 +1,41 @@
-// app/about/page.js  (Server Component — unchanged metadata)
 import AboutPageClient from './AboutPageClient';
 
 export const metadata = {
-  title: 'About Us – RN All Steel Fabrication | Mumbai & Thane',
-  description: 'Learn about RN All Steel Fabrication Work — 15+ years of precision steel fabrication in Mumbai, Thane & Mumbra. 500+ projects completed. ISO-quality standards, skilled team.',
-  keywords: 'about RN All Steel, steel fabrication company Mumbai, steel fabrication company Thane, Mumbra steel fabrication, steel fabrication experts',
-  alternates: { canonical: 'https://rnallsteelfabrication.com/about' },
+  title: 'About RN All Steel Fabrication | Steel Fabricators in Thane',
+  description:
+    'Learn about RN All Steel Fabrication, a steel fabrication company serving Thane, Mumbai and Mumbra with SS railings, steel gates, security doors and custom metal work backed by 15+ years of experience.',
+  keywords: [
+    'about RN All Steel Fabrication',
+    'steel fabrication company Thane',
+    'steel fabricator Mumbai',
+    'steel fabrication company Mumbra',
+    'experienced steel fabricators Thane',
+    'custom steel fabrication company Mumbai'
+  ],
+  alternates: {
+    canonical: 'https://rnallsteelfabrication.com/about',
+  },
   openGraph: {
-    title: 'About RN All Steel Fabrication Work | Mumbai & Thane',
-    description: '15+ years of precision steel fabrication in Mumbai, Thane & Mumbra. 500+ completed projects.',
+    title: 'About RN All Steel Fabrication | Steel Fabricators in Thane',
+    description:
+      'RN All Steel Fabrication serves Thane, Mumbai and Mumbra with SS railings, steel gates, security doors and custom fabrication backed by 15+ years of experience.',
     url: 'https://rnallsteelfabrication.com/about',
-    images: [{ url: '/images/banner.jpg', width: 1200, height: 630, alt: 'RN All Steel Fabrication – About Us' }],
+    type: 'website',
+    images: [
+      {
+        url: '/images/banner.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'About RN All Steel Fabrication',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'About RN All Steel Fabrication | Steel Fabricators in Thane',
+    description:
+      'Learn about RN All Steel Fabrication, serving Thane, Mumbai and Mumbra with quality steel fabrication services.',
+    images: ['/images/banner.jpg'],
   },
 };
 

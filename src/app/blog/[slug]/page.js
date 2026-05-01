@@ -78,29 +78,79 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const post = getPostBySlug(slug);
-  if (!post) return { title: 'Post Not Found | RN All Steel Blog' };
 
-  const url     = `https://rnallsteelfabrication.com/blog/${slug}`;
+  if (!post) {
+    return {
+      title: 'Post Not Found | RN All Steel Blog',
+      description: 'The requested article could not be found.',
+      robots: { index: false, follow: false },
+    };
+  }
+
+  const url = `https://rnallsteelfabrication.com/blog/${slug}`;
   const ogImage = post.coverImage
-    ? [{ url: `https://rnallsteelfabrication.com${post.coverImage}`, width: 1200, height: 630, alt: post.title }]
-    : [{ url: 'https://rnallsteelfabrication.com/og-default.webp',   width: 1200, height: 630, alt: 'RN All Steel Fabrication' }];
+    ? [
+        {
+          url: `https://rnallsteelfabrication.com${post.coverImage}`,
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ]
+    : [
+        {
+          url: 'https://rnallsteelfabrication.com/og-default.webp',
+          width: 1200,
+          height: 630,
+          alt: 'RN All Steel Fabrication Blog',
+        },
+      ];
+
+  const keywordList = [
+    post.category,
+    ...(post.tags || []),
+    'steel fabrication blog',
+    'steel fabrication Mumbai',
+    'steel fabrication Thane',
+  ].filter(Boolean);
 
   return {
-    title:       `${post.title} | RN All Steel Blog`,
+    title: post.title,
     description: post.description,
-    keywords:    post.tags?.join(', '),
-    authors:     [{ name: post.author }],
-    robots:      { index: true, follow: true, 'max-snippet': -1, 'max-image-preview': 'large' },
-    alternates:  { canonical: url },
+    keywords: keywordList,
+    authors: [{ name: post.author || 'RN All Steel Fabrication' }],
+    creator: 'RN All Steel Fabrication',
+    publisher: 'RN All Steel Fabrication',
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-snippet': -1,
+        'max-image-preview': 'large',
+        'max-video-preview': -1,
+      },
+    },
+    alternates: { canonical: url },
     openGraph: {
-      type: 'article', title: post.title, description: post.description,
-      url, siteName: 'RN All Steel Fabrication', images: ogImage,
-      publishedTime: post.date ?? undefined,
-      authors: [post.author], tags: post.tags,
+      type: 'article',
+      url,
+      title: post.title,
+      description: post.description,
+      siteName: 'RN All Steel Fabrication',
+      locale: 'en_IN',
+      images: ogImage,
+      publishedTime: post.date || undefined,
+      modifiedTime: post.updatedDate || post.date || undefined,
+      authors: [post.author || 'RN All Steel Fabrication'],
+      tags: post.tags || [],
     },
     twitter: {
-      card: 'summary_large_image', title: post.title,
-      description: post.description, images: ogImage.map((i) => i.url),
+      card: 'summary_large_image',
+      title: post.title,
+      description: post.description,
+      images: ogImage.map((i) => i.url),
     },
   };
 }
@@ -110,45 +160,96 @@ export async function generateMetadata({ params }) {
 ───────────────────────────────────────────── */
 function ArticleSchema({ post, slug }) {
   const base = 'https://rnallsteelfabrication.com';
-  const url  = `${base}/blog/${slug}`;
+  const url = `${base}/blog/${slug}`;
+
+  const wordCount = post.content
+    ? post.content.replace(/[#_*`>\-\n]/g, ' ').split(/\s+/).filter(Boolean).length
+    : undefined;
 
   const schemas = [
     {
-      '@context': 'https://schema.org', '@type': 'Article',
-      headline: post.title, description: post.description,
-      ...(post.coverImage && { image: `${base}${post.coverImage}` }),
-      datePublished: post.date ?? undefined,
-      dateModified:  post.date ?? undefined,
-      author:    { '@type': 'Organization', name: post.author, url: base },
-      publisher: {
-        '@type': 'Organization', name: 'RN All Steel Fabrication', url: base,
-        logo: { '@type': 'ImageObject', url: `${base}/logo.png` },
+      '@context': 'https://schema.org',
+      '@type': 'BlogPosting',
+      '@id': `${url}#article`,
+      mainEntityOfPage: {
+        '@type': 'WebPage',
+        '@id': url,
       },
-      mainEntityOfPage: { '@type': 'WebPage', '@id': url },
-      keywords: post.tags?.join(', '), articleSection: post.category,
+      headline: post.title,
+      description: post.description,
+      ...(post.coverImage && {
+        image: {
+          '@type': 'ImageObject',
+          url: `${base}${post.coverImage}`,
+        },
+      }),
+      datePublished: post.date || undefined,
+      dateModified: post.updatedDate || post.date || undefined,
+      author: {
+        '@type': 'Organization',
+        name: post.author || 'RN All Steel Fabrication',
+        url: base,
+      },
+      publisher: {
+        '@type': 'Organization',
+        name: 'RN All Steel Fabrication',
+        url: base,
+        logo: {
+          '@type': 'ImageObject',
+          url: `${base}/images/logo.jpg`,
+        },
+      },
+      articleSection: post.category || 'Steel Fabrication',
+      keywords: post.tags?.join(', '),
+      inLanguage: 'en-IN',
+      wordCount,
+      isPartOf: {
+        '@type': 'Blog',
+        '@id': `${base}/blog#blog`,
+        name: 'RN All Steel Fabrication Blog',
+        url: `${base}/blog`,
+      },
+      about: [
+        { '@type': 'Thing', name: 'Steel Fabrication' },
+        { '@type': 'Place', name: 'Mumbai' },
+        { '@type': 'Place', name: 'Thane' },
+      ],
     },
     {
-      '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
       itemListElement: [
         { '@type': 'ListItem', position: 1, name: 'Home', item: base },
         { '@type': 'ListItem', position: 2, name: 'Blog', item: `${base}/blog` },
         { '@type': 'ListItem', position: 3, name: post.title, item: url },
       ],
     },
-    ...(post.faq?.length ? [{
-      '@context': 'https://schema.org', '@type': 'FAQPage',
-      mainEntity: post.faq.map((f) => ({
-        '@type': 'Question', name: f.question,
-        acceptedAnswer: { '@type': 'Answer', text: f.answer },
-      })),
-    }] : []),
+    ...(post.faq?.length
+      ? [
+          {
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            mainEntity: post.faq.map((f) => ({
+              '@type': 'Question',
+              name: f.question,
+              acceptedAnswer: {
+                '@type': 'Answer',
+                text: f.answer,
+              },
+            })),
+          },
+        ]
+      : []),
   ];
 
   return (
     <>
       {schemas.map((s, i) => (
-        <script key={i} type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(s) }} />
+        <script
+          key={i}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(s) }}
+        />
       ))}
     </>
   );

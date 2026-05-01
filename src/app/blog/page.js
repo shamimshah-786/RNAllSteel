@@ -2,20 +2,31 @@ import BlogListingClient from './BlogListingClient';
 import { getAllPosts } from '@/lib/blog';
 
 export const metadata = {
-  title: 'Steel Fabrication Tips & Guides | Blog – RN All Steel',
+  title: 'Steel Fabrication Blog for Mumbai & Thane | RN All Steel',
   description:
-    'Expert guides on steel railings, main gates, window grills, and fabrication tips for Mumbai & Thane homeowners and contractors.',
-  keywords:
-    'steel fabrication blog, railing tips Mumbai, main gate guide Thane, window grill types, steel care tips',
-  alternates: { canonical: 'https://rnallsteelfabrication.com/blog' },
+    'Read steel fabrication tips, railing guides, gate ideas, grill designs and maintenance advice from RN All Steel for homeowners and businesses in Mumbai, Thane and Mumbra.',
+  keywords: [
+    'steel fabrication blog',
+    'steel railing guide Mumbai',
+    'main gate ideas Thane',
+    'window grill design Mumbra',
+    'steel fabrication tips Mumbai',
+    'stainless steel maintenance tips',
+    'balcony grill design ideas',
+    'RN All Steel blog'
+  ],
+  alternates: {
+    canonical: 'https://rnallsteelfabrication.com/blog',
+  },
   openGraph: {
-    title: 'Steel Fabrication Blog | RN All Steel – Mumbai & Thane',
+    title: 'Steel Fabrication Blog for Mumbai & Thane | RN All Steel',
     description:
-      'Expert guides, tips and project insights for steel fabrication across Mumbai & Thane.',
+      'Steel fabrication tips, railing guides, gate ideas, grill designs and maintenance advice for Mumbai, Thane and Mumbra.',
     url: 'https://rnallsteelfabrication.com/blog',
+    type: 'website',
     images: [
       {
-        url: 'https://rnallsteelfabrication.com/og-default.webp',
+        url: '/blog/stainless-steel-main-gate-house.webp',
         width: 1200,
         height: 630,
         alt: 'RN All Steel Fabrication Blog',
@@ -24,8 +35,10 @@ export const metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Steel Fabrication Blog | RN All Steel',
-    description: 'Expert guides on railings, gates, grills for Mumbai & Thane.',
+    title: 'Steel Fabrication Blog for Mumbai & Thane | RN All Steel',
+    description:
+      'Steel fabrication tips, railing guides, gate ideas and grill design advice for Mumbai, Thane and Mumbra.',
+    images: ['/blog/stainless-steel-main-gate-house.webp'],
   },
 };
 

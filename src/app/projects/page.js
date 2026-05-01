@@ -1,20 +1,45 @@
 import ProjectsPageClient from './ProjectsPageClient';
 
 export const metadata = {
-  title: 'Steel Fabrication Projects Portfolio | Mumbai & Thane',
+  title: 'Steel Fabrication Projects in Mumbai, Thane & Mumbra | RN All Steel',
   description:
-    'Browse our portfolio of 500+ steel fabrication projects in Mumbai, Thane & Mumbra — main gates, SS/MS railings, window grills, collapsible gates, main doors, and more.',
-  keywords:
-    'steel fabrication projects Mumbai, steel railing projects Thane, main gate portfolio, window grill projects Mumbra, steel door portfolio, stainless steel projects',
+    'See completed steel fabrication projects by RN All Steel in Mumbai, Thane & Mumbra, including SS railings, steel gates, security doors, window grills, balcony grills and custom fabrication work.',
+  keywords: [
+    'steel fabrication projects Mumbai',
+    'steel fabrication projects Thane',
+    'steel fabrication projects Mumbra',
+    'SS railing projects Mumbai',
+    'staircase railing projects Thane',
+    'steel gate projects Mumbra',
+    'security door projects Thane',
+    'window grill projects Mumbai',
+    'balcony grill projects Thane',
+    'custom steel fabrication portfolio'
+  ],
   alternates: {
     canonical: 'https://rnallsteelfabrication.com/projects',
   },
   openGraph: {
-    title: 'Steel Fabrication Projects Portfolio | RN All Steel – Mumbai & Thane',
+    title: 'Steel Fabrication Projects in Mumbai, Thane & Mumbra | RN All Steel',
     description:
-      'Browse 500+ completed steel fabrication projects — gates, railings, grills, doors and more across Mumbai & Thane.',
+      'Browse completed SS railing, steel gate, security door and window grill projects across Mumbai, Thane & Mumbra.',
     url: 'https://rnallsteelfabrication.com/projects',
-    images: [{ url: '/projects/main-gates/stainless-steel-main-gate-house.webp', width: 1200, height: 630, alt: 'Steel Fabrication Projects Portfolio' }],
+    type: 'website',
+    images: [
+      {
+        url: '/projects/main-gates/ss-swing-compound-main-gate.webp',
+        width: 1200,
+        height: 630,
+        alt: 'Completed steel fabrication projects by RN All Steel',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Steel Fabrication Projects in Mumbai, Thane & Mumbra | RN All Steel',
+    description:
+      'Browse completed SS railing, steel gate, security door and window grill projects across Mumbai, Thane & Mumbra.',
+    images: ['/projects/main-gates/ss-swing-compound-main-gate.webp'],
   },
 };
 
