@@ -39,7 +39,7 @@ export async function POST(req) {
     }
 
     // required fields
-    if (!name ||  !message) {
+    if (!name || !service || !message) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
