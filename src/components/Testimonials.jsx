@@ -58,141 +58,39 @@ const REVIEWS = [
   },
 ];
 
-/* ─── Avatar ─── */
-const AVATAR_COLORS = [
-  'bg-blue-600', 'bg-emerald-600', 'bg-rose-600',
-  'bg-indigo-600', 'bg-amber-600', 'bg-violet-600',
-];
-function Avatar({ name, size = 44 }) {
+/* The longest review leads the section — computed without mutating REVIEWS */
+const FEATURED = [...REVIEWS].sort((a, b) => b.text.length - a.text.length)[0];
+
+/* ─── Monogram ─── */
+function Avatar({ name, size = 44, tone = 'light' }) {
   const letter = name?.trim()[0]?.toUpperCase() ?? '?';
-  const color  = AVATAR_COLORS[(letter.charCodeAt(0) || 65) % AVATAR_COLORS.length];
   return (
-    <div
-      role="img" aria-label={`Avatar for ${name}`}
-      style={{ width: size, height: size, minWidth: size, fontSize: size * 0.4 }}
-      className={`${color} text-white font-bold rounded-full flex items-center justify-center flex-shrink-0`}
+    <span
+      role="img"
+      aria-label={`Avatar for ${name}`}
+      style={{ width: size, height: size, minWidth: size, fontSize: size * 0.36 }}
+      className={`flex shrink-0 items-center justify-center rounded-full font-semibold
+        ${tone === 'dark'
+          ? 'bg-white/15 text-white'
+          : 'bg-slate-100 text-slate-700 ring-1 ring-gray-200'}`}
     >
       {letter}
-    </div>
+    </span>
   );
 }
 
 /* ─── Stars ─── */
-function Stars({ count = 5, size = 'sm' }) {
+function Stars({ count = 5, className = 'text-[11px]' }) {
   return (
-    <div className="flex items-center gap-0.5" aria-label={`${count} out of 5 stars`}>
+    <span className="flex items-center gap-0.5" aria-label={`${count} out of 5 stars`}>
       {Array.from({ length: 5 }).map((_, i) => (
-        <FaStar key={i}
-          className={`${size === 'sm' ? 'text-xs' : 'text-sm'} ${i < count ? 'text-amber-400' : 'text-gray-200'}`} />
+        <FaStar key={i} className={`${className} ${i < count ? 'text-amber-400' : 'text-gray-200'}`} />
       ))}
-    </div>
+    </span>
   );
 }
 
-/* ─── Featured card (large) ─── */
-function FeaturedCard({ review }) {
-  return (
-    <div className="h-full flex flex-col bg-blue-600 rounded-2xl p-6 sm:p-8 text-white relative overflow-hidden">
-      {/* Decorative circle */}
-      <div className="absolute -top-8 -right-8 w-36 h-36 rounded-full bg-white/10" />
-      <div className="absolute -bottom-10 -left-6 w-24 h-24 rounded-full bg-white/5" />
-
-      <div className="relative flex flex-col h-full gap-6">
-        {/* Top: quote icon + stars */}
-        <div className="flex items-start justify-between">
-          <div className="w-10 h-10 bg-white/15 rounded-xl flex items-center justify-center">
-            <FaQuoteLeft className="text-white text-base" />
-          </div>
-          <div className="flex items-center gap-1.5 bg-white/15 rounded-full px-3 py-1.5">
-            <FaGoogle className="text-white text-xs" />
-            <span className="text-white text-xs font-bold">4.9 · 41 reviews</span>
-          </div>
-        </div>
-
-        {/* Review text */}
-        <blockquote className="flex-1">
-          <p className="text-white/90 text-base sm:text-lg leading-relaxed font-light">
-            "{review.text}"
-          </p>
-        </blockquote>
-
-        {/* Divider */}
-        <div className="border-t border-white/20" />
-
-        {/* Reviewer + CTA */}
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <Avatar name={review.name} size={44} />
-            <div>
-              <p className="text-white font-bold text-sm">{review.name}</p>
-              <p className="text-white/60 text-xs">{review.location} · {review.time}</p>
-            </div>
-          </div>
-          <div>
-            <Stars count={review.rating} />
-          </div>
-        </div>
-
-        {/* CTA */}
-        <a
-          href="https://wa.me/919665181246"
-          target="_blank" rel="noopener noreferrer"
-          className="inline-flex items-center justify-center gap-2 bg-white hover:bg-gray-100 text-blue-700 px-5 py-3 rounded-xl font-bold text-sm transition-colors duration-200 shadow-md"
-        >
-          <FaWhatsapp className="text-green-500 text-base" />
-          Get a Free Quote
-        </a>
-      </div>
-    </div>
-  );
-}
-
-/* ─── Small review card ─── */
-function ReviewCard({ review, index }) {
-  return (
-    <div className="group bg-white rounded-2xl border border-gray-100 hover:border-blue-200 hover:shadow-md p-5 transition-all duration-300 flex flex-col gap-4">
-      {/* Header */}
-      <div className="flex items-start gap-3">
-        <Avatar name={review.name} size={40} />
-        <div className="flex-1 min-w-0">
-          <div className="flex items-start justify-between gap-2">
-            <p className="font-bold text-gray-900 text-sm leading-tight truncate">{review.name}</p>
-            <span className="text-[10px] text-gray-400 font-medium flex-shrink-0">{review.time}</span>
-          </div>
-          <p className="text-[11px] text-gray-400 mt-0.5">{review.location}</p>
-          <div className="mt-1.5">
-            <Stars count={review.rating} />
-          </div>
-        </div>
-      </div>
-
-      {/* Service tag */}
-      <span className="inline-block text-[10px] font-bold text-blue-600 bg-blue-50 border border-blue-100 px-2.5 py-1 rounded-full uppercase tracking-wider self-start">
-        {review.service}
-      </span>
-
-      {/* Text */}
-      <p className="text-sm text-gray-600 leading-relaxed line-clamp-3 flex-1">
-        "{review.text}"
-      </p>
-
-      {/* Footer */}
-      <div className="flex items-center justify-between pt-2 border-t border-gray-100">
-        <div className="flex items-center gap-1.5 text-gray-400">
-          <FaGoogle className="text-xs" />
-          <span className="text-[10px] font-semibold uppercase tracking-wider">
-            Verified Review
-          </span>
-        </div>
-        <div className="w-6 h-6 bg-gray-50 group-hover:bg-blue-600 border border-gray-200 group-hover:border-blue-600 rounded-lg flex items-center justify-center transition-colors duration-200">
-          <HiArrowUpRight className="text-gray-400 group-hover:text-white text-xs transition-colors duration-200" />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ─── Auto-carousel dots ─── */
+/* ─── Dots ─── */
 function Dots({ total, active, onClick }) {
   return (
     <div className="flex items-center gap-1.5" role="tablist" aria-label="Review navigation">
@@ -203,11 +101,8 @@ function Dots({ total, active, onClick }) {
           aria-selected={i === active}
           aria-label={`Review ${i + 1}`}
           onClick={() => onClick(i)}
-          className={`rounded-full transition-all duration-300 ${
-            i === active
-              ? 'w-6 h-2 bg-blue-600'
-              : 'w-2 h-2 bg-gray-300 hover:bg-gray-400'
-          }`}
+          className={`h-[3px] transition-all duration-300
+            ${i === active ? 'w-7 bg-blue-600' : 'w-3 bg-gray-300 hover:bg-gray-400'}`}
         />
       ))}
     </div>
@@ -215,10 +110,11 @@ function Dots({ total, active, onClick }) {
 }
 
 /* ═══════════════════════════════════ MAIN ═══════════════════════════════════ */
-export default function Testimonials({ autoRotateMs = 6000 }) {
+export default function Testimonials({ autoRotateMs = 6500 }) {
   const id = useId();
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
+  const sectionRef = useRef(null);
   const total = REVIEWS.length;
 
   const next = useCallback(() => setActive((i) => (i + 1) % total), [total]);
@@ -230,8 +126,6 @@ export default function Testimonials({ autoRotateMs = 6000 }) {
     return () => clearInterval(t);
   }, [paused, next, autoRotateMs]);
 
-  /* keyboard nav only when focused inside section */
-  const sectionRef = useRef(null);
   useEffect(() => {
     const fn = (e) => {
       if (!sectionRef.current?.contains(document.activeElement)) return;
@@ -242,169 +136,221 @@ export default function Testimonials({ autoRotateMs = 6000 }) {
     return () => window.removeEventListener('keydown', fn);
   }, [next, prev]);
 
-  const featured = REVIEWS.sort((a, b) => b.text.length - a.text.length)[0];
+  const current = REVIEWS[active];
 
   return (
     <section
       ref={sectionRef}
       aria-labelledby={`testimonials-heading-${id}`}
-      className="bg-gray-50 py-16 sm:py-20 lg:py-28"
+      className="bg-slate-50 py-20 sm:py-24 lg:py-28"
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
 
-        {/* ── HEADER ── */}
-        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-12 sm:mb-16">
+        {/* ══════════ HEADER ══════════ */}
+        <div className="flex flex-col gap-8 border-b border-gray-200 pb-12
+          lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-xl">
-            <span className="inline-flex items-center gap-2.5 text-blue-600 text-xs font-extrabold uppercase tracking-[0.22em] mb-5">
-              <span className="w-8 h-[2px] bg-blue-600 rounded-full" />
-              Customer Reviews
-            </span>
+            <p className="inline-flex items-center gap-3 text-[11px] font-semibold
+              uppercase tracking-[0.24em] text-blue-600">
+              <span className="h-px w-8 bg-blue-600" />
+              Customer reviews
+            </p>
             <h2
               id={`testimonials-heading-${id}`}
-              className="text-4xl sm:text-5xl font-bold text-gray-900 leading-[1.08]"
+              className="mt-6 text-3xl font-semibold leading-[1.14] tracking-[-0.025em]
+                text-slate-900 sm:text-4xl lg:text-[2.75rem]"
             >
-              Trusted by
-              <br />
-              <span className="text-blue-600">500+ Clients</span>
-              <br />
-              Across Mumbai.
+              Trusted by <span className="text-blue-600">500+ clients</span> across
+              Mumbai.
             </h2>
-            <p className="mt-4 text-gray-500 text-base leading-relaxed">
-              Real feedback from homeowners and businesses in Mumbai &amp; Thane — quality, punctuality, and honest pricing.
+            <p className="mt-5 text-[15px] leading-relaxed text-slate-600">
+              Real feedback from homeowners and businesses in Mumbai &amp; Thane —
+              on quality, punctuality and honest pricing.
             </p>
           </div>
 
-          {/* Google rating badge */}
-          <div className="flex-shrink-0 flex flex-col items-start lg:items-end gap-4">
-            <div className="flex items-center gap-3 bg-white border border-gray-200 rounded-2xl px-5 py-4 shadow-sm">
-              <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
-                <FaGoogle className="text-blue-600 text-lg" />
-              </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <Stars count={5} size="base" />
-                  <span className="text-xl font-bold text-gray-900 tabular-nums">5.0</span>
-                </div>
-                <p className="text-xs text-gray-400 mt-0.5 font-semibold">41 Google Reviews</p>
-              </div>
+          {/* Google badge */}
+          <div className="flex shrink-0 flex-col items-start gap-4 lg:items-end">
+            <div className="flex items-center gap-4 border border-gray-200 bg-white
+              px-6 py-4">
+              <FaGoogle className="text-xl text-blue-600" />
+              <span>
+                <span className="flex items-center gap-2">
+                  <Stars count={5} className="text-xs" />
+                  <span className="text-lg font-semibold tabular-nums text-slate-900">
+                    5.0
+                  </span>
+                </span>
+                <span className="mt-1 block text-[10px] font-semibold uppercase
+                  tracking-[0.14em] text-slate-400">
+                  41 Google Reviews
+                </span>
+              </span>
             </div>
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white px-6 py-3 rounded-xl font-bold text-sm transition-colors duration-200 group"
+              className="group inline-flex items-center gap-3 rounded-[2px]
+                bg-slate-900 px-7 py-4 text-[12px] font-semibold uppercase
+                tracking-[0.14em] text-white transition-colors duration-200
+                hover:bg-slate-800"
             >
-              Get Free Quote
-              <HiArrowUpRight className="text-sm group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
+              Get a Free Quote
+              <HiArrowUpRight className="text-sm transition-transform duration-200
+                group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
             </Link>
           </div>
         </div>
 
-        {/* ── MAIN GRID ── */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        {/* ══════════ BODY ══════════ */}
+        <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-12">
 
-          {/* Featured — left */}
-          <div className="lg:col-span-5">
-            <FeaturedCard review={featured} />
-          </div>
+          {/* Featured — dark editorial panel */}
+          <figure className="flex flex-col justify-between bg-slate-950 p-8
+            sm:p-10 lg:col-span-5">
+            <div>
+              <FaQuoteLeft className="text-lg text-blue-500" />
+              <blockquote className="mt-6 text-[17px] font-light leading-relaxed
+                text-white/90 sm:text-lg">
+                &ldquo;{FEATURED.text}&rdquo;
+              </blockquote>
+            </div>
 
-          {/* Right: carousel card + 2 small cards */}
-          <div className="lg:col-span-7 flex flex-col gap-5">
+            <figcaption className="mt-10">
+              <div className="flex items-center justify-between gap-4
+                border-t border-white/15 pt-6">
+                <span className="flex items-center gap-3">
+                  <Avatar name={FEATURED.name} size={42} tone="dark" />
+                  <span>
+                    <span className="block text-sm font-semibold text-white">
+                      {FEATURED.name}
+                    </span>
+                    <span className="mt-0.5 block text-[11px] uppercase
+                      tracking-[0.14em] text-white/45">
+                      {FEATURED.location} · {FEATURED.time}
+                    </span>
+                  </span>
+                </span>
+                <Stars count={FEATURED.rating} />
+              </div>
 
-            {/* Carousel card */}
+              <a
+                href="https://wa.me/919665181246"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-6 inline-flex w-full items-center justify-center gap-2.5
+                  rounded-[2px] bg-white px-5 py-3.5 text-[12px] font-semibold
+                  uppercase tracking-[0.14em] text-slate-900 transition-colors
+                  duration-200 hover:bg-slate-100"
+              >
+                <FaWhatsapp className="text-sm text-emerald-500" />
+                Get a Free Quote
+              </a>
+            </figcaption>
+          </figure>
+
+          {/* Rotating review + summary */}
+          <div className="flex flex-col gap-6 lg:col-span-7">
             <div
-              className="relative bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm"
+              className="relative flex-1 border border-gray-200 bg-white p-8 sm:p-10"
               onMouseEnter={() => setPaused(true)}
               onMouseLeave={() => setPaused(false)}
               onFocus={() => setPaused(true)}
               onBlur={() => setPaused(false)}
             >
-              {/* Progress bar */}
               {!paused && (
-                <div key={active} className="absolute top-0 left-0 h-0.5 bg-blue-600 rounded-full"
-                  style={{ animation: `grow ${autoRotateMs}ms linear forwards`, width: '0%' }} />
+                <div
+                  key={active}
+                  className="absolute left-0 top-0 h-[2px] bg-blue-600"
+                  style={{ animation: `grow ${autoRotateMs}ms linear forwards`, width: '0%' }}
+                />
               )}
 
-              <div className="p-6 sm:p-8">
-                <div className="flex items-start justify-between gap-4 mb-5">
-                  <div className="flex items-center gap-3">
-                    <Avatar name={REVIEWS[active].name} size={48} />
-                    <div>
-                      <p className="font-bold text-gray-900">{REVIEWS[active].name}</p>
-                      <p className="text-xs text-gray-400 mt-0.5">{REVIEWS[active].location} · {REVIEWS[active].time}</p>
-                    </div>
-                  </div>
-                  <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
-                    <Stars count={REVIEWS[active].rating} size="base" />
-                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider flex items-center gap-1">
-                      <FaGoogle className="text-xs" /> Verified
+              <div className="flex items-start justify-between gap-4">
+                <span className="flex items-center gap-3">
+                  <Avatar name={current.name} size={46} />
+                  <span>
+                    <span className="block text-sm font-semibold text-slate-900">
+                      {current.name}
                     </span>
-                  </div>
-                </div>
-
-                {/* Service tag */}
-                <span className="inline-block text-[10px] font-bold text-blue-600 bg-blue-50 border border-blue-100 px-2.5 py-1 rounded-full uppercase tracking-wider mb-4">
-                  {REVIEWS[active].service}
+                    <span className="mt-1 block text-[11px] uppercase
+                      tracking-[0.14em] text-slate-400">
+                      {current.location} · {current.time}
+                    </span>
+                  </span>
                 </span>
+                <span className="flex shrink-0 flex-col items-end gap-1.5">
+                  <Stars count={current.rating} className="text-xs" />
+                  <span className="inline-flex items-center gap-1.5 text-[10px]
+                    font-semibold uppercase tracking-[0.14em] text-slate-400">
+                    <FaGoogle className="text-[10px]" /> Verified
+                  </span>
+                </span>
+              </div>
 
-                <blockquote>
-                  <p className="text-gray-700 text-base leading-relaxed">
-                    "{REVIEWS[active].text}"
-                  </p>
-                </blockquote>
+              <p className="mt-6 text-[10px] font-semibold uppercase
+                tracking-[0.18em] text-blue-600">
+                {current.service}
+              </p>
 
-                {/* Controls */}
-                <div className="flex items-center justify-between mt-6 pt-5 border-t border-gray-100">
-                  <Dots total={total} active={active} onClick={setActive} />
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={prev} aria-label="Previous review"
-                      className="w-9 h-9 bg-gray-100 hover:bg-blue-600 hover:text-white text-gray-500 rounded-full flex items-center justify-center transition-colors duration-200"
-                    >
-                      <FaArrowRight className="text-xs rotate-180" />
-                    </button>
-                    <button
-                      onClick={next} aria-label="Next review"
-                      className="w-9 h-9 bg-gray-100 hover:bg-blue-600 hover:text-white text-gray-500 rounded-full flex items-center justify-center transition-colors duration-200"
-                    >
-                      <FaArrowRight className="text-xs" />
-                    </button>
-                  </div>
+              <blockquote className="mt-4 text-[15px] leading-relaxed text-slate-700
+                sm:text-base">
+                &ldquo;{current.text}&rdquo;
+              </blockquote>
+
+              <div className="mt-8 flex items-center justify-between border-t
+                border-gray-200 pt-6">
+                <Dots total={total} active={active} onClick={setActive} />
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={prev}
+                    aria-label="Previous review"
+                    className="flex h-10 w-10 items-center justify-center rounded-[2px]
+                      border border-gray-200 text-slate-500 transition-colors
+                      duration-200 hover:border-blue-600 hover:bg-blue-600
+                      hover:text-white"
+                  >
+                    <FaArrowRight className="rotate-180 text-[11px]" />
+                  </button>
+                  <button
+                    onClick={next}
+                    aria-label="Next review"
+                    className="flex h-10 w-10 items-center justify-center rounded-[2px]
+                      border border-gray-200 text-slate-500 transition-colors
+                      duration-200 hover:border-blue-600 hover:bg-blue-600
+                      hover:text-white"
+                  >
+                    <FaArrowRight className="text-[11px]" />
+                  </button>
                 </div>
               </div>
             </div>
 
-            {/* 2 small cards side by side */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-              {REVIEWS.slice(1, 3).map((r, i) => (
-                <ReviewCard key={r.id} review={r} index={i} />
-              ))}
+            {/* Summary strip */}
+            <div className="flex flex-col items-start justify-between gap-4
+              border border-gray-200 bg-white px-6 py-5 sm:flex-row sm:items-center">
+              <div className="flex items-center gap-4">
+                <span className="flex -space-x-2">
+                  {REVIEWS.slice(0, 4).map((r) => (
+                    <Avatar key={r.id} name={r.name} size={32} />
+                  ))}
+                </span>
+                <p className="text-[13px] text-slate-600">
+                  <strong className="font-semibold text-slate-900">41 customers</strong>{' '}
+                  rated us 5 stars on Google
+                </p>
+              </div>
+              <span className="flex items-center gap-2">
+                <Stars count={5} className="text-xs" />
+                <span className="text-sm font-semibold tabular-nums text-slate-900">
+                  5.0
+                </span>
+                <span className="text-[13px] text-slate-400">/ 5.0</span>
+              </span>
             </div>
           </div>
         </div>
-
-        {/* ── BOTTOM STRIP — all 5-star mention ── */}
-        <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 bg-white border border-gray-100 rounded-2xl px-6 py-4 shadow-sm">
-          <div className="flex items-center gap-3">
-            <div className="flex -space-x-2">
-              {REVIEWS.slice(0, 4).map((r) => (
-                <Avatar key={r.id} name={r.name} size={32} />
-              ))}
-            </div>
-            <p className="text-sm text-gray-700 font-medium">
-              <strong className="text-gray-900 font-bold">41 customers</strong> rated us 5 stars on Google
-            </p>
-          </div>
-          <div className="flex items-center gap-1.5 flex-shrink-0">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <FaStar key={i} className="text-amber-400 text-sm" />
-            ))}
-            <span className="text-gray-900 font-bold ml-1.5">5.0</span>
-            <span className="text-gray-400 text-sm">/ 5.0</span>
-          </div>
-        </div>
-
       </div>
 
-      {/* Progress bar animation */}
       <style>{`
         @keyframes grow {
           from { width: 0% }

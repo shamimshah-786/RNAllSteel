@@ -16,27 +16,28 @@ import {
   FaChevronRight,
 } from "react-icons/fa";
 import { HiArrowUpRight } from "react-icons/hi2";
+import { TOP_SERVICES } from "@/data/services";
+import { CORE_LOCATIONS } from "@/data/locations";
+import { BUSINESS } from "@/lib/seo";
 
 /* ───────────────────────────────────────────
    DATA
 ─────────────────────────────────────────── */
 const QUICK_LINKS = [
-  { href: "/",         label: "Home" },
-  { href: "/about",    label: "About Us" },
-  { href: "/services", label: "Services" },
-  { href: "/projects", label: "Projects" },
-  { href: "/blog",     label: "Blog" },
-  { href: "/contact",  label: "Contact" },
+  { href: "/",          label: "Home" },
+  { href: "/about",     label: "About Us" },
+  { href: "/services",  label: "All Services" },
+  { href: "/locations", label: "Service Areas" },
+  { href: "/projects",  label: "Projects" },
+  { href: "/blog",      label: "Blog" },
+  { href: "/contact",   label: "Contact" },
 ];
 
-const SERVICES = [
-  "Steel Railings",
-  "Main Gates",
-  "Window Grills",
-  "Main Doors",
-  "Collapsible Gates",
-  "Street Stalls",
-];
+/* Top services — the full list lives on /services */
+const FOOTER_SERVICES = TOP_SERVICES.slice(0, 8);
+
+/* Core service-area cities for internal linking */
+const FOOTER_CITIES = CORE_LOCATIONS.slice(0, 10);
 
 const CONTACT_ITEMS = [
   {
@@ -63,8 +64,8 @@ const CONTACT_ITEMS = [
   {
     icon: FaClock,
     href: null,
-    primary: "Mon – Sun: 9 AM – 9 PM",
-    secondary: "Emergency support available",
+    primary: BUSINESS.hoursLong,
+    secondary: "Site visits by appointment",
     label: "Business hours",
   },
 ];
@@ -317,16 +318,16 @@ export default function Footer() {
                 Our Services
               </h4>
               <ul className="space-y-2.5">
-                {SERVICES.map((s) => (
-                  <li key={s}>
-                    <Link href="/services"
+                {FOOTER_SERVICES.map((s) => (
+                  <li key={s.slug}>
+                    <Link href={`/services/${s.slug}`}
                       className="group flex items-center gap-2 text-sm text-gray-400
                         hover:text-white transition-colors duration-150
                         focus-visible:outline-none focus-visible:text-white">
                       <span className="w-1.5 h-1.5 rounded-full bg-blue-600
                         flex-shrink-0 group-hover:bg-blue-400
                         transition-colors duration-150" />
-                      {s}
+                      {s.short}
                     </Link>
                   </li>
                 ))}
@@ -378,8 +379,36 @@ export default function Footer() {
             </div>
           </div>
 
+          {/* ── SERVICE AREAS ── */}
+          <div className="mt-12 border-t border-gray-800/60 pt-8">
+            <h4 className="text-[11px] font-black text-gray-500 uppercase
+              tracking-[0.2em] mb-4">
+              Service Areas
+            </h4>
+            <ul className="flex flex-wrap gap-x-5 gap-y-2.5">
+              {FOOTER_CITIES.map((c) => (
+                <li key={c.slug}>
+                  <Link href={`/locations/${c.slug}`}
+                    className="text-[13px] text-gray-400 hover:text-white
+                      transition-colors duration-150">
+                    Steel Fabrication in {c.name}
+                  </Link>
+                </li>
+              ))}
+              <li>
+                <Link href="/locations"
+                  className="inline-flex items-center gap-1.5 text-[13px]
+                    font-semibold text-blue-400 hover:text-blue-300
+                    transition-colors duration-150">
+                  All Maharashtra
+                  <HiArrowUpRight className="text-[10px]" />
+                </Link>
+              </li>
+            </ul>
+          </div>
+
           {/* ── BOTTOM BAR ── */}
-          <div className="mt-12 border-t border-gray-800/60 py-6">
+          <div className="mt-10 border-t border-gray-800/60 py-6">
             <div className="flex flex-col sm:flex-row items-center
               justify-between gap-3">
 

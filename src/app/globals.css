@@ -1,8 +1,22 @@
 @import "tailwindcss";
 
+/* ═══════════════════════════════════════════════
+   DESIGN TOKENS
+   Primary brand colour is unchanged (blue-600).
+═══════════════════════════════════════════════ */
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #0f172a;
+
+  --brand: #2563eb;        /* blue-600 — primary, do not change */
+  --brand-dark: #1d4ed8;   /* blue-700 */
+  --brand-soft: #eff6ff;   /* blue-50  */
+
+  --ink: #0f172a;          /* slate-900 */
+  --ink-soft: #475569;     /* slate-600 */
+  --muted: #64748b;        /* slate-500 */
+  --line: #e5e7eb;         /* gray-200 — hairline rules */
+  --surface: #f8fafc;      /* slate-50 */
 }
 
 @theme inline {
@@ -12,12 +26,75 @@
   --font-mono: var(--font-geist-mono);
 }
 
-
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--brand);
+  color: #ffffff;
+}
+
+/* Anchor targets clear the sticky header */
+[id] {
+  scroll-margin-top: 96px;
+}
+
+/* ═══════════════════════════════════════════════
+   UTILITIES
+═══════════════════════════════════════════════ */
+
+/* Hidden scrollbar for horizontal rails (reels, filmstrips) */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Editorial hairline rule used under section eyebrows */
+.rule-accent {
+  background: var(--brand);
+}
+
+/* Equaliser bars on the currently-playing reel */
+@keyframes eq {
+  0%, 100% { transform: scaleY(0.35); }
+  50%      { transform: scaleY(1); }
+}
+
+/* Subtle entrance for above-the-fold content */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.rise {
+  animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.rise-1 { animation-delay: 0.05s; }
+.rise-2 { animation-delay: 0.12s; }
+.rise-3 { animation-delay: 0.19s; }
+.rise-4 { animation-delay: 0.26s; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .rise { animation: none; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 /* Smooth transitions */

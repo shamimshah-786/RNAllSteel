@@ -1,203 +1,205 @@
 import Link from "next/link";
-import {
-  FaAward,
-  FaUsers,
-  FaStar,
-  FaShieldAlt,
-  FaPhone,
-  FaCheckCircle,
-  FaArrowRight,
-} from "react-icons/fa";
+import Image from "next/image";
+import { FaArrowRight, FaPhone, FaQuoteLeft, FaStar } from "react-icons/fa";
 
-const stats = [
-  { value: "15+",  label: "Years of Experience",   sub: "Since 2010" },
-  { value: "500+", label: "Projects Completed",     sub: "Mumbai & Thane" },
-  { value: "5.0",  label: "Google Rating",          sub: "41 Reviews" },
-  { value: "100%", label: "Client Satisfaction",    sub: "Every Project" },
+const DELIVERABLES = [
+  { title: "Precision Engineering",    desc: "Measured on site, cut to the millimetre." },
+  { title: "Certified Materials",      desc: "SS 304, MS and aluminium from trusted mills." },
+  { title: "Timely Completion",        desc: "Agreed dates, held to — every project." },
+  { title: "Transparent Pricing",      desc: "Itemised quotes with no hidden additions." },
+  { title: "Custom Design Solutions",  desc: "Your drawing, or ours — built to fit." },
+  { title: "After-Sales Support",      desc: "Servicing and repairs long after handover." },
 ];
 
-const features = [
-  "Precision Engineering",
-  "Quality Certified Materials",
-  "Timely Project Completion",
-  "Competitive Pricing",
-  "Custom Design Solutions",
-  "After-Sales Support",
+const PROCESS = [
+  { step: "01", title: "Site Visit",           desc: "Free consultation, measurement and material advice at your location." },
+  { step: "02", title: "Design & Quote",       desc: "A drawing and an itemised quotation — approved before we cut a single bar." },
+  { step: "03", title: "Fabricate & Install",  desc: "Built in our Mumbra workshop, installed and finished by our own team." },
 ];
 
 export default function AboutSection() {
   return (
-    <section className="bg-white overflow-hidden">
+    <section className="bg-white py-20 sm:py-24 lg:py-28">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
 
-      {/* ── TOP BAND — Dark editorial strip with large numbers ── */}
-      <div className="bg-slate-900 py-12 sm:py-16">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-0 divide-x divide-slate-700">
-            {stats.map((s, i) => (
-              <div
-                key={i}
-                className="px-6 sm:px-8 lg:px-10 py-2 first:pl-0 last:pr-0"
-              >
-                <p className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white tabular-nums leading-none mb-1">
-                  {s.value}
-                </p>
-                <p className="text-sm font-semibold text-slate-300 leading-tight">
-                  {s.label}
-                </p>
-                <p className="text-xs text-slate-500 mt-0.5">{s.sub}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+        {/* ══════════ INTRO ══════════ */}
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16">
 
-      {/* ── MAIN CONTENT ── */}
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-28">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-0 items-stretch">
+          {/* LEFT — heading + story */}
+          <div className="lg:col-span-7">
+            <p className="inline-flex items-center gap-3 text-[11px] font-semibold
+              uppercase tracking-[0.24em] text-blue-600">
+              <span className="h-px w-8 bg-blue-600" />
+              About Us
+            </p>
 
-          {/* LEFT — Brand Story */}
-          <div className="lg:col-span-5 lg:pr-12 xl:pr-16 lg:border-r lg:border-gray-100 flex flex-col justify-between gap-10">
+            <h2 className="mt-6 max-w-2xl text-3xl font-semibold leading-[1.14]
+              tracking-[-0.025em] text-slate-900 sm:text-4xl lg:text-[2.75rem]">
+              Mumbai&rsquo;s most <span className="text-blue-600">trusted</span>{" "}
+              steel fabricators.
+            </h2>
 
-            {/* Label + Heading */}
-            <div>
-              <span className="inline-flex items-center gap-2 text-blue-600 text-xs font-bold uppercase tracking-[0.2em] mb-5">
-                <span className="w-6 h-px bg-blue-600 inline-block" />
-                About Us
-              </span>
-              <h2 className="text-3xl sm:text-4xl xl:text-5xl font-bold text-gray-900 leading-tight">
-                Mumbai's Most{" "}
-                <span className="text-blue-600">Trusted</span>{" "}
-                Steel Fabricators
-              </h2>
-            </div>
-
-            {/* Paragraphs */}
-            <div className="space-y-5 text-gray-600 text-base leading-relaxed">
+            <div className="mt-8 max-w-2xl space-y-5 text-[15px] leading-relaxed
+              text-slate-600">
               <p>
-                <strong className="text-gray-900 font-semibold">
+                <strong className="font-semibold text-slate-900">
                   RN All Steel Fabrication
                 </strong>{" "}
-                has been crafting precision steel structures across Mumbai and
-                Thane since 2010 — earning a reputation built not on promises,
-                but on work that speaks for itself.
+                has been crafting precision steel structures across Mumbai, Thane
+                and Mumbra since 2010 — building a reputation not on promises, but
+                on work that speaks for itself.
               </p>
               <p>
                 From sleek{" "}
-                <strong className="text-gray-900 font-semibold">
+                <strong className="font-semibold text-slate-900">
                   glass railings and security doors
                 </strong>{" "}
-                to heavy-duty industrial frameworks, we handle every project
-                with the same obsessive attention to detail — whether it's a
-                single home gate or a full commercial buildout.
+                to heavy-duty industrial frameworks, every project gets the same
+                attention to detail — whether it is a single window grill or a full
+                commercial buildout.
               </p>
               <p>
-                Every weld, every finish, every delivery date is a commitment
-                we take personally. That's why{" "}
-                <strong className="text-gray-900 font-semibold">
-                  500+ clients
-                </strong>{" "}
+                Every weld, every finish and every delivery date is a commitment we
+                take personally. That is why{" "}
+                <strong className="font-semibold text-slate-900">500+ clients</strong>{" "}
                 across the region trust us with their most important spaces.
               </p>
             </div>
 
-            {/* Google Review Callout */}
-            <div className="flex items-start gap-4 bg-slate-50 border border-gray-100 rounded-2xl p-5">
-              <div className="flex-shrink-0 mt-0.5">
-                <div className="flex gap-0.5 mb-1">
-                  {[...Array(5)].map((_, i) => (
-                    <FaStar key={i} className="text-yellow-400 text-sm" />
-                  ))}
-                </div>
-                <p className="text-2xl font-bold text-gray-900 tabular-nums leading-none">
-                  5.0
-                </p>
-                <p className="text-xs text-gray-400 mt-0.5">41 reviews</p>
-              </div>
-              <div className="w-px self-stretch bg-gray-200" />
-              <div>
-                <p className="text-sm text-gray-700 italic leading-relaxed">
-                  "Good People, Good Service & Good Work as expected"
-                </p>
-                <p className="text-xs text-blue-600 font-semibold mt-2">
-                  — Verified Google Customer
-                </p>
-              </div>
-            </div>
-
-          </div>
-
-          {/* RIGHT — Features + CTA */}
-          <div className="lg:col-span-7 lg:pl-12 xl:pl-16 flex flex-col justify-between gap-10">
-
-            {/* What We Deliver */}
-            <div>
-              <p className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em] mb-6 flex items-center gap-2">
-                <span className="w-6 h-px bg-gray-300 inline-block" />
-                What We Deliver
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-0">
-                {features.map((f, i) => (
-                  <div
-                    key={i}
-                    className={`flex items-center gap-3 py-4 border-b border-gray-100 group ${
-                      i >= features.length - 2 ? "border-b-0" : ""
-                    }`}
-                  >
-                    <div className="w-5 h-5 rounded-full bg-blue-50 border border-blue-200 flex items-center justify-center flex-shrink-0 group-hover:bg-blue-600 group-hover:border-blue-600 transition-colors duration-200">
-                      <FaCheckCircle className="text-blue-500 text-[9px] group-hover:text-white transition-colors duration-200" />
-                    </div>
-                    <span className="text-sm sm:text-base font-medium text-gray-700 group-hover:text-gray-900 transition-colors duration-200">
-                      {f}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Process Steps — horizontal */}
-            <div className="bg-slate-900 rounded-2xl p-6 sm:p-8">
-              <p className="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mb-6">
-                Our Process
-              </p>
-              <div className="grid grid-cols-3 gap-4 sm:gap-6">
-                {[
-                  { step: "01", title: "Site Visit", desc: "Free consultation & measurements" },
-                  { step: "02", title: "Design & Quote", desc: "Custom plan with transparent pricing" },
-                  { step: "03", title: "Fabricate & Install", desc: "Precision build, on-time delivery" },
-                ].map((p) => (
-                  <div key={p.step} className="text-center sm:text-left">
-                    <p className="text-3xl sm:text-4xl font-bold text-blue-500 tabular-nums leading-none mb-2">
-                      {p.step}
-                    </p>
-                    <p className="text-white font-semibold text-sm mb-1">
-                      {p.title}
-                    </p>
-                    <p className="text-slate-400 text-xs leading-snug hidden sm:block">
-                      {p.desc}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* CTA Row */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            {/* CTA row */}
+            <div className="mt-9 flex flex-col items-start gap-5 sm:flex-row sm:items-center">
               <a
                 href="tel:+919665181246"
-                className="inline-flex items-center gap-2.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white px-6 py-3.5 rounded-xl font-semibold text-sm transition-colors duration-200 shadow-md hover:shadow-lg"
+                className="inline-flex items-center gap-3 rounded-[2px] bg-blue-600
+                  px-7 py-4 text-[12px] font-semibold uppercase tracking-[0.14em]
+                  text-white transition-colors duration-200 hover:bg-blue-700"
               >
-                <FaPhone className="text-xs" />
-                Call for Free Site Visit
+                <FaPhone className="text-[11px]" />
+                Book a Free Site Visit
               </a>
               <Link
                 href="/about"
-                className="inline-flex items-center gap-2 text-gray-700 hover:text-blue-600 font-semibold text-sm transition-colors duration-200 group"
+                className="group inline-flex items-center gap-2 text-[12px]
+                  font-semibold uppercase tracking-[0.14em] text-slate-700
+                  transition-colors duration-200 hover:text-blue-700"
               >
-                Learn More About Us
-                <FaArrowRight className="text-xs group-hover:translate-x-1 transition-transform duration-200" />
+                More about us
+                <FaArrowRight className="text-[10px] transition-transform
+                  duration-200 group-hover:translate-x-1" />
               </Link>
             </div>
+          </div>
 
+          {/* RIGHT — image + review */}
+          <div className="lg:col-span-5">
+            <div className="relative overflow-hidden rounded-[3px] bg-slate-200">
+              <div className="relative w-full pt-[80%]">
+                <Image
+                  src="/images/banner2.jpg"
+                  alt="RN All Steel Fabrication team at work in Mumbra, Thane"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 40vw"
+                  className="object-cover"
+                />
+              </div>
+              <div className="absolute inset-0 bg-gradient-to-t
+                from-slate-950/60 to-transparent" />
+              <p className="absolute bottom-4 left-5 text-[11px] font-semibold
+                uppercase tracking-[0.16em] text-white/90">
+                On site · Mumbai, Thane &amp; Mumbra
+              </p>
+            </div>
+
+            {/* Review callout */}
+            <figure className="mt-6 border border-gray-200 bg-slate-50 p-6">
+              <FaQuoteLeft className="text-base text-blue-600" />
+              <blockquote className="mt-4 text-[15px] italic leading-relaxed text-slate-700">
+                &ldquo;Good people, good service &amp; good work — exactly as
+                promised.&rdquo;
+              </blockquote>
+              <figcaption className="mt-5 flex items-center justify-between
+                border-t border-gray-200 pt-4">
+                <span className="text-[11px] font-semibold uppercase
+                  tracking-[0.14em] text-slate-500">
+                  Verified Google customer
+                </span>
+                <span className="flex items-center gap-1">
+                  {[...Array(5)].map((_, i) => (
+                    <FaStar key={i} className="text-[11px] text-amber-400" />
+                  ))}
+                  <span className="ml-1.5 text-sm font-semibold tabular-nums
+                    text-slate-900">5.0</span>
+                </span>
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+
+        {/* ══════════ WHAT WE DELIVER ══════════ */}
+        <div className="mt-20 border-t border-gray-200 pt-14 lg:mt-24">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.24em]
+            text-slate-400">
+            What we deliver
+          </p>
+
+          <div className="mt-8 grid grid-cols-1 gap-x-12 sm:grid-cols-2 lg:grid-cols-3">
+            {DELIVERABLES.map((d, i) => (
+              <div
+                key={d.title}
+                className="group border-b border-gray-200 py-6"
+              >
+                <div className="flex items-baseline gap-4">
+                  <span className="text-[11px] font-semibold tabular-nums
+                    text-blue-600">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <div>
+                    <p className="text-[15px] font-semibold text-slate-900
+                      transition-colors duration-200 group-hover:text-blue-700">
+                      {d.title}
+                    </p>
+                    <p className="mt-1.5 text-[13px] leading-relaxed text-slate-500">
+                      {d.desc}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ══════════ PROCESS ══════════ */}
+        <div className="mt-16 bg-slate-950 p-8 sm:p-12 lg:p-14">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.24em]
+                text-blue-400">
+                How we work
+              </p>
+              <h3 className="mt-4 text-2xl font-semibold tracking-[-0.02em]
+                text-white sm:text-3xl">
+                Three steps, start to finish.
+              </h3>
+            </div>
+            <p className="max-w-xs text-[13px] leading-relaxed text-slate-400">
+              No surprises, no revised bills at handover — you approve every stage
+              before it begins.
+            </p>
+          </div>
+
+          <div className="mt-12 grid grid-cols-1 gap-px bg-white/10 sm:grid-cols-3">
+            {PROCESS.map((p) => (
+              <div key={p.step} className="bg-slate-950 p-6 sm:p-7">
+                <p className="text-4xl font-semibold leading-none tabular-nums
+                  text-blue-500">
+                  {p.step}
+                </p>
+                <p className="mt-5 text-base font-semibold text-white">{p.title}</p>
+                <p className="mt-2 text-[13px] leading-relaxed text-slate-400">
+                  {p.desc}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </div>

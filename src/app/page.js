@@ -3,6 +3,7 @@ import Hero from '../components/Hero'
 import Services from '../components/Services'
 import Testimonials from '../components/Testimonials'
 import ProjectsSection from '@/components/ProjectSection'
+import Reels from '@/components/Reels'
 
 export const metadata = {
   title: 'Steel Fabrication in Mumbai, Thane & Mumbra | RN All Steel Fabrication',
@@ -54,10 +55,10 @@ export default function Home() {
   return (
     <>
       <Hero />
-      <AboutSection/>
-
+      <AboutSection />
       <Services />
-      <ProjectsSection/>
+      <ProjectsSection />
+      <Reels />
       <Testimonials />
     </>
   )

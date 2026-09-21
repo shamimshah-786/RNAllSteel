@@ -5,7 +5,7 @@ import Link          from 'next/link';
 import Image         from 'next/image';
 import {
   FaClock, FaArrowLeft, FaWhatsapp,
-  FaPhone, FaCalendarAlt, FaTag, FaUser,
+  FaPhone, FaCalendarAlt, FaTag, FaUser, FaChevronRight,
 } from 'react-icons/fa';
 import { HiArrowUpRight, HiShare } from 'react-icons/hi2';
 import '@/styles/blog-content.css';
@@ -23,7 +23,11 @@ const MDX_COMPONENTS = {
 
   // Override default HTML elements
   img: ({ src, alt, width, height, ...props }) => (
-    <span className="block my-6 overflow-hidden rounded-xl">
+    <span className="my-6 block overflow-hidden rounded-[3px]">
+      {/* Plain <img> on purpose: MDX authors write markdown images with no
+          dimensions, which next/image requires. eslint-disable-next-line
+          @next/next/no-img-element */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={src}
         alt={alt ?? ''}
@@ -260,24 +264,26 @@ function ArticleSchema({ post, slug }) {
 ───────────────────────────────────────────── */
 function Breadcrumb({ category, title }) {
   return (
-    <nav aria-label="Breadcrumb">
-      <ol className="flex flex-wrap items-center gap-1.5 text-xs text-gray-400 font-medium mb-8">
+    <nav aria-label="Breadcrumb" className="py-5">
+      <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px]
+        font-medium uppercase tracking-[0.12em] text-slate-400">
         {[
-          { href: '/',                                               label: 'Home' },
-          { href: '/blog',                                           label: 'Blog' },
+          { href: '/', label: 'Home' },
+          { href: '/blog', label: 'Blog' },
           { href: `/blog?category=${encodeURIComponent(category)}`, label: category },
-        ].map((crumb, i) => (
-          <li key={crumb.href} className="flex items-center gap-1.5">
-            {i > 0 && <span className="text-gray-200 select-none">/</span>}
+        ].map((crumb) => (
+          <li key={crumb.href} className="flex items-center gap-2">
             <Link href={crumb.href}
-              className="hover:text-blue-600 transition-colors duration-150">
+              className="transition-colors duration-150 hover:text-blue-600">
               {crumb.label}
             </Link>
+            <FaChevronRight className="text-[7px] text-slate-300" />
           </li>
         ))}
-        <li className="flex items-center gap-1.5">
-          <span className="text-gray-200 select-none">/</span>
-          <span className="text-gray-500 line-clamp-1 max-w-[180px]">{title}</span>
+        <li>
+          <span aria-current="page" className="line-clamp-1 max-w-[220px] text-slate-700">
+            {title}
+          </span>
         </li>
       </ol>
     </nav>
@@ -286,8 +292,8 @@ function Breadcrumb({ category, title }) {
 
 function MetaPill({ icon: Icon, children }) {
   return (
-    <span className="inline-flex items-center gap-1.5 text-xs text-gray-500 font-medium">
-      {Icon && <Icon className="text-[10px] text-gray-400" />}
+    <span className="inline-flex items-center gap-2 text-[12.5px] text-slate-500">
+      {Icon && <Icon className="text-[10px] text-blue-600" />}
       {children}
     </span>
   );
@@ -295,8 +301,9 @@ function MetaPill({ icon: Icon, children }) {
 
 function SidebarLabel({ children }) {
   return (
-    <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.22em] mb-4 flex items-center gap-2">
-      <span className="inline-block w-3 h-0.5 bg-blue-500 rounded-full" />
+    <p className="mb-4 flex items-center gap-2.5 text-[10px] font-semibold
+      uppercase tracking-[0.2em] text-slate-400">
+      <span className="inline-block h-px w-4 bg-blue-600" />
       {children}
     </p>
   );
@@ -304,7 +311,7 @@ function SidebarLabel({ children }) {
 
 function SidebarCard({ children, className = '' }) {
   return (
-    <div className={`bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden ${className}`}>
+    <div className={`border border-gray-200 bg-white ${className}`}>
       {children}
     </div>
   );
@@ -316,26 +323,28 @@ function RelatedPostCard({ post }) {
     : null;
   return (
     <Link href={`/blog/${post.slug}`}
-      className="flex gap-3 p-3 rounded-xl hover:bg-gray-50
-        border border-transparent hover:border-gray-200
-        transition-all duration-150 group -mx-1">
+      className="group -mx-2 flex gap-3.5 px-2 py-3 transition-colors duration-150
+        hover:bg-slate-50">
       {post.coverImage ? (
-        <div className="relative w-14 h-14 rounded-lg overflow-hidden flex-shrink-0 bg-gray-100">
-          <Image src={post.coverImage} alt={post.title} fill
-            sizes="56px" className="object-cover group-hover:scale-105 transition-transform duration-300" />
+        <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-[2px]
+          bg-slate-200">
+          <Image src={post.coverImage} alt="" fill sizes="56px"
+            className="object-cover transition-transform duration-300
+              group-hover:scale-105" />
         </div>
       ) : (
-        <div className="w-14 h-14 rounded-lg flex-shrink-0 bg-gradient-to-br
-          from-blue-100 to-blue-50 flex items-center justify-center">
-          <span className="text-blue-400 text-lg">🔩</span>
+        <div className="flex h-14 w-14 shrink-0 items-center justify-center
+          rounded-[2px] bg-slate-100 text-[10px] font-semibold uppercase
+          tracking-[0.1em] text-slate-400">
+          {post.category?.slice(0, 3)}
         </div>
       )}
-      <div className="flex-1 min-w-0">
-        <p className="text-xs font-semibold text-gray-800 group-hover:text-blue-700
-          transition-colors duration-150 line-clamp-2 leading-snug mb-1">
+      <div className="min-w-0 flex-1">
+        <p className="line-clamp-2 text-[13px] font-semibold leading-snug
+          text-slate-800 transition-colors duration-150 group-hover:text-blue-700">
           {post.title}
         </p>
-        {dateStr && <p className="text-[10px] text-gray-400">{dateStr}</p>}
+        {dateStr && <p className="mt-1 text-[11px] text-slate-400">{dateStr}</p>}
       </div>
     </Link>
   );
@@ -343,21 +352,23 @@ function RelatedPostCard({ post }) {
 
 function NotFound() {
   return (
-    <main className="bg-gray-50 min-h-screen flex items-center justify-center px-4">
-      <div className="text-center bg-white border border-gray-100 rounded-3xl
-        p-12 shadow-sm max-w-sm w-full">
-        <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-5">
-          <span className="text-3xl">🔧</span>
-        </div>
-        <p className="text-5xl font-black text-gray-100 mb-1 leading-none">404</p>
-        <p className="font-bold text-gray-900 text-xl mb-2">Article Not Found</p>
-        <p className="text-sm text-gray-500 mb-6 max-w-xs mx-auto">
-          This article may have been moved or removed. Browse all our steel fabrication guides below.
+    <main className="flex min-h-[60vh] items-center justify-center bg-white px-4 py-20">
+      <div className="w-full max-w-md border border-gray-200 bg-white p-10 text-center">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-blue-600">
+          404
+        </p>
+        <p className="mt-5 text-2xl font-semibold tracking-[-0.02em] text-slate-900">
+          Article not found
+        </p>
+        <p className="mx-auto mt-3 max-w-xs text-[14px] leading-relaxed text-slate-500">
+          This guide may have been moved or renamed. Browse all our steel
+          fabrication guides instead.
         </p>
         <Link href="/blog"
-          className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700
-            text-white px-5 py-2.5 rounded-xl font-bold text-sm transition-colors duration-200">
-          <FaArrowLeft className="text-xs" /> Back to Blog
+          className="mt-7 inline-flex items-center gap-2.5 rounded-[2px] bg-blue-600
+            px-6 py-3.5 text-[11px] font-semibold uppercase tracking-[0.14em]
+            text-white transition-colors duration-200 hover:bg-blue-700">
+          <FaArrowLeft className="text-[10px]" /> Back to blog
         </Link>
       </div>
     </main>
@@ -393,36 +404,39 @@ export default async function BlogPostPage({ params }) {
   const shareText = encodeURIComponent(`${post.title} — ${postUrl}`);
 
   return (
-    <main className="bg-[#f8f8f6] min-h-screen">
+    <main className="min-h-screen bg-slate-50">
       <ArticleSchema post={post} slug={slug} />
 
       {/* ═══ HERO ═══ */}
-      <section className="bg-white border-b border-gray-100">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-12 sm:pt-12 sm:pb-16">
+      <section className="border-b border-gray-200 bg-white">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <Breadcrumb category={post.category} title={post.title} />
 
-          <div className="max-w-3xl">
-            <Link href={`/blog?category=${encodeURIComponent(post.category)}`}
-              className="inline-flex items-center gap-1.5 text-[10px] font-black uppercase
-                tracking-[0.22em] px-3 py-1.5 rounded-full mb-5
-                bg-blue-600 text-white hover:bg-blue-700
-                transition-colors duration-150 shadow-sm shadow-blue-200">
+          <div className="max-w-3xl pb-12 sm:pb-14">
+            <Link
+              href={`/blog?category=${encodeURIComponent(post.category)}`}
+              className="inline-flex items-center gap-3 text-[11px] font-semibold
+                uppercase tracking-[0.24em] text-blue-600 transition-colors
+                duration-150 hover:text-blue-700"
+            >
+              <span className="h-px w-8 bg-blue-600" />
               {post.category}
             </Link>
 
-            <h1 className="text-2xl sm:text-[2.5rem] lg:text-[2.75rem] font-black text-gray-950
-              leading-[1.08] tracking-tight mb-5">
+            <h1 className="mt-6 text-[1.9rem] font-semibold leading-[1.14]
+              tracking-[-0.025em] text-slate-900 sm:text-[2.5rem] lg:text-[2.75rem]">
               {post.title}
             </h1>
 
             {post.description && (
-              <p className="text-base sm:text-lg text-gray-500 leading-relaxed max-w-2xl mb-6">
+              <p className="mt-6 max-w-2xl text-[16px] leading-relaxed text-slate-600
+                sm:text-[17px]">
                 {post.description}
               </p>
             )}
 
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mb-5
-              pt-5 border-t border-gray-100">
+            <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2
+              border-t border-gray-200 pt-6">
               <MetaPill icon={FaUser}>{post.author}</MetaPill>
               {dateStr && (
                 <MetaPill icon={FaCalendarAlt}>
@@ -433,12 +447,14 @@ export default async function BlogPostPage({ params }) {
             </div>
 
             {post.tags?.length > 0 && (
-              <div className="flex flex-wrap gap-2" aria-label="Article tags">
+              <div className="mt-5 flex flex-wrap gap-2" aria-label="Article tags">
                 {post.tags.map((tag) => (
-                  <span key={tag}
-                    className="inline-flex items-center gap-1 text-[11px] font-semibold
-                      text-gray-500 bg-gray-100 px-2.5 py-1 rounded-md border border-gray-200/80">
-                    <FaTag className="text-[8px] opacity-50" />
+                  <span
+                    key={tag}
+                    className="inline-flex items-center gap-1.5 border border-gray-200
+                      bg-slate-50 px-2.5 py-1 text-[11px] font-medium text-slate-600"
+                  >
+                    <FaTag className="text-[8px] text-slate-400" />
                     {tag}
                   </span>
                 ))}
@@ -450,15 +466,18 @@ export default async function BlogPostPage({ params }) {
 
       {/* Cover image */}
       {post.coverImage && (
-        <div className="w-full bg-white border-b border-gray-100">
+        <div className="w-full border-b border-gray-200 bg-white">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="relative w-full aspect-[15/9] sm:aspect-[21/9] bg-gray-100 overflow-hidden
-              shadow-md border-x border-gray-100">
-              <Image src={post.coverImage} alt={post.title} fill
+            <div className="relative aspect-[15/9] w-full overflow-hidden
+              rounded-[3px] bg-slate-200 sm:aspect-[21/9]">
+              <Image
+                src={post.coverImage}
+                alt={post.title}
+                fill
                 sizes="(max-width:1280px) 100vw, 1280px"
-                className="object-cover" priority />
-              <div className="absolute inset-x-0 bottom-0 h-24
-                bg-gradient-to-t from-black/20 to-transparent" />
+                className="object-cover"
+                priority
+              />
             </div>
           </div>
         </div>
@@ -506,22 +525,40 @@ export default async function BlogPostPage({ params }) {
               <div className="p-5">
                 <SidebarLabel>Share Article</SidebarLabel>
                 <div className="space-y-2">
-                  <a href={`https://wa.me/?text=${shareText}`}
-                    target="_blank" rel="noopener noreferrer"
-                    className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl
-                      bg-[#e9f7ef] border border-[#c6e8d3] hover:bg-[#d4f1e1]
-                      transition-colors duration-150">
-                    <FaWhatsapp className="text-[#25D366] text-sm flex-shrink-0" />
-                    <span className="text-xs font-semibold text-[#1a7a3b]">WhatsApp</span>
+                  <a
+                    href={`https://wa.me/?text=${shareText}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2.5 border border-gray-200 px-3.5
+                      py-2.5 transition-colors duration-150 hover:border-emerald-500"
+                  >
+                    <FaWhatsapp className="shrink-0 text-sm text-emerald-500" />
+                    <span className="text-[12px] font-semibold text-slate-700">
+                      WhatsApp
+                    </span>
                   </a>
                   {[
-                    { href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=${encodeURIComponent(postUrl)}`, label: 'Twitter / X', cls: 'bg-sky-50 border-sky-100 hover:bg-sky-100 text-sky-800' },
-                    { href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(postUrl)}`, label: 'Facebook', cls: 'bg-blue-50 border-blue-100 hover:bg-blue-100 text-blue-800' },
-                  ].map(({ href, label, cls }) => (
-                    <a key={label} href={href} target="_blank" rel="noopener noreferrer"
-                      className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl border transition-colors duration-150 ${cls}`}>
-                      <HiShare className="text-sm flex-shrink-0" />
-                      <span className="text-xs font-semibold">{label}</span>
+                    {
+                      href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=${encodeURIComponent(postUrl)}`,
+                      label: 'Twitter / X',
+                    },
+                    {
+                      href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(postUrl)}`,
+                      label: 'Facebook',
+                    },
+                  ].map(({ href, label }) => (
+                    <a
+                      key={label}
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2.5 border border-gray-200 px-3.5
+                        py-2.5 transition-colors duration-150 hover:border-blue-600"
+                    >
+                      <HiShare className="shrink-0 text-sm text-blue-600" />
+                      <span className="text-[12px] font-semibold text-slate-700">
+                        {label}
+                      </span>
                     </a>
                   ))}
                 </div>
@@ -534,26 +571,26 @@ export default async function BlogPostPage({ params }) {
 
             {/* Mobile TOC */}
             {headings.length > 2 && (
-              <details className="xl:hidden bg-white border border-gray-200 rounded-2xl
-                p-4 mb-8 shadow-sm group open:shadow-md transition-shadow duration-200">
-                <summary className="flex items-center justify-between cursor-pointer
-                  text-[11px] font-black text-gray-500 uppercase tracking-[0.2em] list-none select-none">
-                  <span className="flex items-center gap-2">
-                    <span className="w-3 h-0.5 bg-blue-500 rounded-full inline-block" />
-                    On This Page
+              <details className="group mb-8 border border-gray-200 bg-white p-5 xl:hidden">
+                <summary className="flex cursor-pointer select-none items-center
+                  justify-between text-[11px] font-semibold uppercase
+                  tracking-[0.2em] text-slate-500 [&::-webkit-details-marker]:hidden">
+                  <span className="flex items-center gap-2.5">
+                    <span className="inline-block h-px w-4 bg-blue-600" />
+                    On this page
                   </span>
-                  <span className="text-gray-400 transition-transform duration-200
-                    group-open:rotate-180 text-base leading-none">▾</span>
+                  <span className="text-base leading-none text-slate-400
+                    transition-transform duration-200 group-open:rotate-180">▾</span>
                 </summary>
-                <div className="mt-3 pt-3 border-t border-gray-100">
+                <div className="mt-4 border-t border-gray-200 pt-4">
                   <TableOfContents headings={headings} mobile />
                 </div>
               </details>
             )}
 
             {/* ── MDX Content — uses rawSource, NOT post.content ── */}
-            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm
-              px-6 sm:px-8 lg:px-10 py-8 sm:py-10">
+            <div className="border border-gray-200 bg-white px-6 py-8 sm:px-8
+              sm:py-10 lg:px-10">
               <div className="blog-content" itemProp="articleBody">
                 <MDXRemote
                   source={rawSource}
@@ -565,20 +602,23 @@ export default async function BlogPostPage({ params }) {
 
             {/* Tags footer */}
             {post.tags?.length > 0 && (
-              <div className="mt-6 bg-white border border-gray-100 rounded-2xl px-6 py-5 shadow-sm">
-                <p className="text-[10px] font-black text-gray-400 uppercase
-                  tracking-[0.22em] mb-3 flex items-center gap-2">
-                  <span className="w-3 h-0.5 bg-blue-500 rounded-full inline-block" />
+              <div className="mt-6 border border-gray-200 bg-white px-6 py-5">
+                <p className="mb-3.5 flex items-center gap-2.5 text-[10px]
+                  font-semibold uppercase tracking-[0.2em] text-slate-400">
+                  <span className="inline-block h-px w-4 bg-blue-600" />
                   Tagged
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {post.tags.map((tag) => (
-                    <Link key={tag} href={`/blog?search=${encodeURIComponent(tag)}`}
-                      className="inline-flex items-center gap-1 text-[11px] font-semibold
-                        text-gray-500 bg-gray-50 hover:bg-blue-50 hover:text-blue-700
-                        px-3 py-1.5 rounded-lg border border-gray-200
-                        hover:border-blue-200 transition-colors duration-150">
-                      <FaTag className="text-[8px] opacity-50" />
+                    <Link
+                      key={tag}
+                      href={`/blog?search=${encodeURIComponent(tag)}`}
+                      className="inline-flex items-center gap-1.5 border border-gray-200
+                        bg-slate-50 px-3 py-1.5 text-[11px] font-medium text-slate-600
+                        transition-colors duration-150 hover:border-blue-600
+                        hover:text-blue-700"
+                    >
+                      <FaTag className="text-[8px] text-slate-400" />
                       {tag}
                     </Link>
                   ))}
@@ -587,62 +627,83 @@ export default async function BlogPostPage({ params }) {
             )}
 
             {/* Author strip */}
-            <div className="mt-6 bg-white border border-gray-100 rounded-2xl px-6 py-5 shadow-sm">
+            <div className="mt-6 border border-gray-200 bg-white px-6 py-5">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br
-                  from-blue-600 to-blue-800 flex items-center justify-center
-                  flex-shrink-0 shadow-sm shadow-blue-200">
-                  <span className="text-white font-black text-sm tracking-tight">RN</span>
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center
+                  rounded-[2px] bg-blue-600">
+                  <span className="text-[13px] font-semibold tracking-tight text-white">
+                    RN
+                  </span>
                 </div>
                 <div>
-                  <p className="font-bold text-gray-900 text-sm" itemProp="author">{post.author}</p>
-                  <p className="text-xs text-gray-500 mt-0.5">Steel fabrication experts — Mumbai &amp; Thane since 2010</p>
+                  <p className="text-[14px] font-semibold text-slate-900" itemProp="author">
+                    {post.author}
+                  </p>
+                  <p className="mt-0.5 text-[12.5px] text-slate-500">
+                    Steel fabricators — Mumbai &amp; Thane since 2010
+                  </p>
                 </div>
                 <div className="ml-auto hidden sm:block">
-                  <a href="https://wa.me/919665181246" target="_blank" rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-xs font-bold
-                      text-green-700 bg-green-50 hover:bg-green-100 border border-green-200
-                      px-3 py-1.5 rounded-lg transition-colors duration-150">
-                    <FaWhatsapp className="text-[#25D366]" /> Ask a question
+                  <a
+                    href="https://wa.me/919665181246"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 border border-gray-200
+                      px-4 py-2.5 text-[11px] font-semibold uppercase
+                      tracking-[0.12em] text-slate-700 transition-colors duration-150
+                      hover:border-emerald-500 hover:text-emerald-700"
+                  >
+                    <FaWhatsapp className="text-sm text-emerald-500" /> Ask a question
                   </a>
                 </div>
               </div>
             </div>
 
             {/* Mobile CTA */}
-            <div className="xl:hidden mt-6 rounded-2xl overflow-hidden
-              bg-gradient-to-br from-gray-900 via-gray-900 to-blue-950
-              border border-gray-800 shadow-lg">
-              <div className="p-6">
-                <p className="text-[10px] font-black text-blue-400 uppercase tracking-[0.22em] mb-2">Free Quote</p>
-                <p className="font-black text-white text-lg leading-tight mb-1">Need Steel Work Done?</p>
-                <p className="text-sm text-gray-400 mb-5">Free site visit — Mumbai &amp; Thane. No obligations.</p>
-                <div className="flex flex-col sm:flex-row gap-2">
-                  <a href="https://wa.me/919665181246" target="_blank" rel="noopener noreferrer"
-                    className="flex-1 inline-flex items-center justify-center gap-2
-                      bg-blue-600 hover:bg-blue-500 text-white px-4 py-3
-                      rounded-xl font-bold text-sm transition-colors duration-200">
-                    <FaWhatsapp className="text-[#86efac]" /> WhatsApp Now
-                  </a>
-                  <a href="tel:+919665181246"
-                    className="flex-1 inline-flex items-center justify-center gap-2
-                      bg-white/10 hover:bg-white/15 border border-white/20
-                      text-white px-4 py-3 rounded-xl font-bold text-sm transition-colors duration-200">
-                    <FaPhone className="text-xs" /> Call Now
-                  </a>
-                </div>
+            <div className="mt-6 bg-slate-950 p-7 xl:hidden">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.2em]
+                text-blue-400">
+                Free quote
+              </p>
+              <p className="mt-3 text-lg font-semibold leading-snug text-white">
+                Need steel work done?
+              </p>
+              <p className="mt-2 text-[13px] text-slate-400">
+                Free site visit across Mumbai &amp; Thane. No obligation.
+              </p>
+              <div className="mt-6 flex flex-col gap-2.5 sm:flex-row">
+                <a
+                  href="https://wa.me/919665181246"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex flex-1 items-center justify-center gap-2.5
+                    rounded-[2px] bg-blue-600 px-4 py-3.5 text-[11px] font-semibold
+                    uppercase tracking-[0.14em] text-white transition-colors
+                    duration-200 hover:bg-blue-700"
+                >
+                  <FaWhatsapp className="text-sm" /> WhatsApp now
+                </a>
+                <a
+                  href="tel:+919665181246"
+                  className="inline-flex flex-1 items-center justify-center gap-2.5
+                    rounded-[2px] border border-white/20 px-4 py-3.5 text-[11px]
+                    font-semibold uppercase tracking-[0.14em] text-white
+                    transition-colors duration-200 hover:border-white/50"
+                >
+                  <FaPhone className="text-[10px]" /> Call now
+                </a>
               </div>
             </div>
 
             {/* Related — mobile */}
             {relatedPosts.length > 0 && (
-              <div className="xl:hidden mt-6 bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
-                <p className="text-[10px] font-black text-gray-400 uppercase
-                  tracking-[0.22em] mb-4 flex items-center gap-2">
-                  <span className="w-3 h-0.5 bg-blue-500 rounded-full inline-block" />
-                  Related Articles
+              <div className="mt-6 border border-gray-200 bg-white p-6 xl:hidden">
+                <p className="mb-4 flex items-center gap-2.5 text-[10px] font-semibold
+                  uppercase tracking-[0.2em] text-slate-400">
+                  <span className="inline-block h-px w-4 bg-blue-600" />
+                  Related articles
                 </p>
-                <div className="space-y-1">
+                <div className="divide-y divide-gray-200">
                   {relatedPosts.map((p) => <RelatedPostCard key={p.slug} post={p} />)}
                 </div>
               </div>
@@ -657,78 +718,117 @@ export default async function BlogPostPage({ params }) {
                 <div className="px-3 pb-4"><TableOfContents headings={headings} /></div>
               </SidebarCard>
             )}
-            <div className="rounded-2xl overflow-hidden bg-gradient-to-br from-gray-900 via-gray-900 to-blue-950 border border-gray-800 shadow-lg">
-              <div className="h-1 bg-gradient-to-r from-blue-500 via-blue-400 to-cyan-400" />
-              <div className="p-5">
-                <p className="text-[10px] font-black text-blue-400 uppercase tracking-[0.22em] mb-3">Free Quote</p>
-                <h2 className="font-black text-white text-[1.05rem] leading-tight mb-2">Need Steel Work Done?</h2>
-                <p className="text-xs text-gray-400 mb-5 leading-relaxed">Free site visit across Mumbai &amp; Thane — no obligations, just honest advice.</p>
-                <div className="space-y-2">
-                  <a href="https://wa.me/919665181246" target="_blank" rel="noopener noreferrer"
-                    className="w-full inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-4 py-2.5 rounded-xl font-bold text-sm transition-colors duration-200 shadow-sm shadow-blue-900/50">
-                    <FaWhatsapp className="text-[#86efac]" /> WhatsApp Now
-                  </a>
-                  <Link href="/contact"
-                    className="w-full inline-flex items-center justify-center gap-2 bg-white/8 hover:bg-white/14 border border-white/15 text-white px-4 py-2.5 rounded-xl font-bold text-sm transition-colors duration-200">
-                    Get Free Quote
-                  </Link>
-                  <a href="tel:+919665181246"
-                    className="w-full inline-flex items-center justify-center gap-2 text-gray-500 hover:text-gray-300 text-[11px] font-semibold transition-colors duration-150 pt-1">
-                    <FaPhone className="text-[9px]" /> +91 96651 81246
-                  </a>
-                </div>
+            <div className="bg-slate-950 p-6">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.2em]
+                text-blue-400">
+                Free quote
+              </p>
+              <h2 className="mt-3 text-[1.05rem] font-semibold leading-snug text-white">
+                Need steel work done?
+              </h2>
+              <p className="mt-2.5 text-[12.5px] leading-relaxed text-slate-400">
+                Free site visit across Mumbai &amp; Thane — no obligation, just
+                honest advice.
+              </p>
+              <div className="mt-6 space-y-2">
+                <a
+                  href="https://wa.me/919665181246"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex w-full items-center justify-center gap-2.5
+                    rounded-[2px] bg-blue-600 px-4 py-3 text-[11px] font-semibold
+                    uppercase tracking-[0.14em] text-white transition-colors
+                    duration-200 hover:bg-blue-700"
+                >
+                  <FaWhatsapp className="text-sm" /> WhatsApp now
+                </a>
+                <Link
+                  href="/contact"
+                  className="inline-flex w-full items-center justify-center gap-2
+                    rounded-[2px] border border-white/20 px-4 py-3 text-[11px]
+                    font-semibold uppercase tracking-[0.14em] text-white
+                    transition-colors duration-200 hover:border-white/50"
+                >
+                  Get free quote
+                </Link>
+                <a
+                  href="tel:+919665181246"
+                  className="inline-flex w-full items-center justify-center gap-2 pt-2
+                    text-[11px] font-semibold text-slate-400 transition-colors
+                    duration-150 hover:text-white"
+                >
+                  <FaPhone className="text-[9px]" /> +91 96651 81246
+                </a>
               </div>
             </div>
+
             {relatedPosts.length > 0 && (
               <SidebarCard>
                 <div className="p-5">
-                  <SidebarLabel>Related Articles</SidebarLabel>
-                  <div className="space-y-1">
+                  <SidebarLabel>Related articles</SidebarLabel>
+                  <div className="divide-y divide-gray-200">
                     {relatedPosts.map((p) => <RelatedPostCard key={p.slug} post={p} />)}
                   </div>
-                  <Link href="/blog"
-                    className="mt-4 w-full inline-flex items-center justify-center gap-1.5 text-xs font-bold text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 px-4 py-2.5 rounded-xl border border-blue-100 hover:border-blue-200 transition-colors duration-150">
-                    View All Articles <HiArrowUpRight className="text-sm" />
+                  <Link
+                    href="/blog"
+                    className="mt-5 inline-flex w-full items-center justify-center gap-2
+                      border border-gray-200 px-4 py-3 text-[11px] font-semibold
+                      uppercase tracking-[0.12em] text-blue-600 transition-colors
+                      duration-150 hover:border-blue-600"
+                  >
+                    All articles <HiArrowUpRight className="text-xs" />
                   </Link>
                 </div>
               </SidebarCard>
             )}
+
             <SidebarCard>
               <div className="p-5">
-                <SidebarLabel>Explore More</SidebarLabel>
-                <nav aria-label="Site sections" className="space-y-1.5">
+                <SidebarLabel>Explore more</SidebarLabel>
+                <nav aria-label="Site sections" className="divide-y divide-gray-200">
                   {[
-                    { href: '/services', label: 'All Services',     sub: 'Railings, gates, grills & more', emoji: '🔩' },
-                    { href: '/projects', label: 'Project Portfolio', sub: '500+ completed projects',        emoji: '📸' },
-                    { href: '/contact',  label: 'Get Free Quote',    sub: 'Free site visit — no obligation', emoji: '📞' },
-                  ].map(({ href, label, sub, emoji }) => (
-                    <Link key={href} href={href}
-                      className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 border border-transparent hover:border-gray-200 transition-all duration-150 group">
-                      <span className="text-base flex-shrink-0">{emoji}</span>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-xs font-bold text-gray-800 group-hover:text-blue-700 transition-colors duration-150">{label}</p>
-                        <p className="text-[10px] text-gray-400 mt-0.5 truncate">{sub}</p>
+                    { href: '/services', label: 'All services', sub: 'Railings, gates, grills & more' },
+                    { href: '/projects', label: 'Project gallery', sub: '500+ completed projects' },
+                    { href: '/locations', label: 'Service areas', sub: 'Across Maharashtra' },
+                    { href: '/contact', label: 'Get a free quote', sub: 'Free site visit, no obligation' },
+                  ].map(({ href, label, sub }) => (
+                    <Link
+                      key={href}
+                      href={href}
+                      className="group flex items-center gap-3 py-3 transition-colors
+                        duration-150"
+                    >
+                      <div className="min-w-0 flex-1">
+                        <p className="text-[13px] font-semibold text-slate-800
+                          transition-colors duration-150 group-hover:text-blue-700">
+                          {label}
+                        </p>
+                        <p className="mt-0.5 truncate text-[11px] text-slate-400">{sub}</p>
                       </div>
-                      <HiArrowUpRight className="text-gray-300 group-hover:text-blue-500 text-sm flex-shrink-0 transition-colors duration-150" />
+                      <HiArrowUpRight className="shrink-0 text-xs text-slate-300
+                        transition-colors duration-150 group-hover:text-blue-600" />
                     </Link>
                   ))}
                 </nav>
               </div>
             </SidebarCard>
+
             <SidebarCard>
               <div className="p-5">
-                <SidebarLabel>Why Choose Us</SidebarLabel>
-                <ul className="space-y-2.5">
+                <SidebarLabel>Why choose us</SidebarLabel>
+                <ul className="space-y-3">
                   {[
-                    { icon: '✅', text: '15+ Years Experience' },
-                    { icon: '📍', text: 'Based in Mumbai & Thane' },
-                    { icon: '🔩', text: 'SS 304 / 316 Certified Work' },
-                    { icon: '⭐', text: '500+ Happy Clients' },
-                    { icon: '🚗', text: 'Free On-Site Visit' },
-                  ].map(({ icon, text }) => (
-                    <li key={text} className="flex items-center gap-2.5">
-                      <span className="text-sm flex-shrink-0" aria-hidden="true">{icon}</span>
-                      <span className="text-xs font-semibold text-gray-700">{text}</span>
+                    '15+ years of experience',
+                    'Own workshop in Mumbra, Thane',
+                    'SS 304 / MS grade materials',
+                    '500+ completed projects',
+                    'Free on-site visit & measurement',
+                  ].map((text) => (
+                    <li key={text} className="flex items-start gap-2.5">
+                      <span className="mt-1.5 h-1 w-1 shrink-0 bg-blue-600" />
+                      <span className="text-[12.5px] leading-snug text-slate-700">
+                        {text}
+                      </span>
                     </li>
                   ))}
                 </ul>
